@@ -1,0 +1,110 @@
+//dashboard
+
+{"totalMembers":15,"activeTasks":5,"pendingReviews":2,"completionRate":84}
+
+//Tasks
+ "tasks": [
+        {
+            "id": 55,
+            "title": "Correção de Bug",
+            "description": "Implementar a correção para o bug reportado no sistema. A correção deve ser testada e validada para garantir a estabilidade e evitar regressões.",
+            "status": "a-fazer",
+            "priority": "high",
+            "assigneeId": 10,
+            "createdById": 10,
+            "dueDate": "2025-09-06",
+            "project": "Manutenção Sistema",
+            "tags": [
+                "bugfix",
+                "manutenção",
+                "qualidade"
+            ],
+            "createdAt": "2025-10-08T22:20:36.353Z",
+            "updatedAt": "2025-10-08T22:32:13.485Z",
+            "assignee": {
+                "id": 10,
+                "email": "lucas@company.com",
+                "name": "Lucas de Oliveira Lima",
+                "password": "$2b$10$86j3jQWAPBqYnIh0/35BD.F7SLaeiWDW6TBKo/8HgRlNz2IOfVUaW",
+                "role": "admin",
+                "department": "Development",
+                "phone": "(81) 9 9999 9999",
+                "image": null,
+                "joinDate": "2025-09-29T12:26:25.710Z",
+                "status": "active"
+            },
+            "createdBy": {
+                "id": 10,
+                "email": "lucas@company.com",
+                "name": "Lucas de Oliveira Lima",
+                "password": "$2b$10$86j3jQWAPBqYnIh0/35BD.F7SLaeiWDW6TBKo/8HgRlNz2IOfVUaW",
+                "role": "admin",
+                "department": "Development",
+                "phone": "(81) 9 9999 9999",
+                "image": null,
+                "joinDate": "2025-09-29T12:26:25.710Z",
+                "status": "active"
+            },
+            "assigneeName": "Lucas de Oliveira Lima",
+            "assigneeDepartment": "Development",
+            "createdByName": "Lucas de Oliveira Lima"
+        },
+
+
+//Members
+
+{
+    "members": [
+        {
+            "id": 28,
+            "name": "Rayane C",
+            "email": "rayane@company.com",
+            "role": "manager",
+            "department": "Management",
+            "phone": "81 9 9999 9999",
+            "joinDate": "2025-10-01T22:55:22.713Z",
+            "status": "active"
+        },
+
+//analytics
+//parte da api que retorna um resumo de analises feitas
+
+1:"$Sreact.fragment"
+2:I[40464,[],""]
+3:I[96950,[],""]
+4:I[74880,[],"ViewportBoundary"]
+6:I[74880,[],"MetadataBoundary"]
+8:"$Sreact.suspense"
+9:I[45992,[],"AsyncMetadata"]
+0:{"b":"rSj5QZON6JkOQyCOQQDC9","f":[["children","analytics",["analytics",{"children":["__PAGE__",{}]}],["analytics",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":null},[null,[],[]],false],["$","$1","h",{"children":[null,["$","$1","JYQMM2CHsrlAGaSGgaNuc",{"children":[["$","$L4",null,{"children":"$L5"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],[["$","$L6","JYQMM2CHsrlAGaSGgaNuc",{"children":"$L7"}]],null]}],false]],"S":false}
+7:["$","$8",null,{"fallback":null,"children":["$","$L9",null,{"promise":"$@a"}]}]
+5:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+a:{"metadata":[["$","title","0",{"children":"uStore - Gerenciamento de Equipes"}],["$","meta","1",{"name":"description","content":"AplicaÃ§Ã£o de Gerenciamento de Equipes e Tarefas"}]],"error":null,"digest":"$undefined"}
+
+
+1:"$Sreact.fragment"
+3:I[74880,[],"OutletBoundary"]
+6:I[45992,[],"AsyncMetadataOutlet"]
+8:I[74880,[],"ViewportBoundary"]
+a:I[74880,[],"MetadataBoundary"]
+c:"$Sreact.suspense"
+d:I[45992,[],"AsyncMetadata"]
+0:{"b":"rSj5QZON6JkOQyCOQQDC9","f":[["children","analytics","children","__PAGE__",["__PAGE__",{}],["__PAGE__",["$","$1","c",{"children":["$L2","$undefined",null,["$","$L3",null,{"children":["$L4","$L5",["$","$L6",null,{"promise":"$@7"}]]}]]}],{},null,false],["$","$1","h",{"children":[null,["$","$1","MaUGn9qkur9BrskCXVp7S",{"children":[["$","$L8",null,{"children":"$L9"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],[["$","$La","MaUGn9qkur9BrskCXVp7S",{"children":"$Lb"}]],null]}],false]],"S":false}
+b:["$","$c",null,{"fallback":null,"children":["$","$Ld",null,{"promise":"$@e"}]}]
+5:null
+9:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+7:{"metadata":[["$","title","0",{"children":"uStore - Gerenciamento de Equipes"}],["$","meta","1",{"name":"description","content":"AplicaÃ§Ã£o de Gerenciamento de Equipes e Tarefas"}]],"error":null,"digest":"$undefined"}
+e:{"metadata":"$7:metadata","error":null,"digest":"$undefined"}
+4:null
+f:I[63841,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"DashboardHeader"]
+10:I[68374,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"AnalyticsHeader"]
+11:I[27040,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"Tabs"]
+12:I[27040,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"TabsList"]
+13:I[27040,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"TabsTrigger"]
+14:I[68374,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"AnalyticsTabLabel"]
+15:I[27040,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"TabsContent"]
+16:I[2668,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"AnalyticsOverview"]
+17:I[14328,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"TaskAnalytics"]
+18:I[55322,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"TeamPerformance"]
+19:I[25625,["318","static/chunks/318-37725a5d531ab0a7.js","307","static/chunks/307-842282186b2b5f42.js","401","static/chunks/401-d5a7fbb47d010e40.js","179","static/chunks/179-cb876655cd56fc50.js","911","static/chunks/911-645bdcc8afadafd5.js","990","static/chunks/990-7e7aacbcca2627e1.js","745","static/chunks/app/analytics/page-dd1d92c9d58856b1.js"],"ProjectProgress"]
+2:["$","div",null,{"className":"min-h-screen bg-background","children":[["$","$Lf",null,{"user":{"id":1,"email":"admin@company.com","role":"admin","name":"manager","department":"Management","iat":1760048945,"exp":1760135345}}],["$","main",null,{"className":"container mx-auto px-4 py-8","children":["$","div",null,{"className":"space-y-8","children":[["$","$L10",null,{}],["$","$L11",null,{"defaultValue":"overview","children":[["$","$L12",null,{"className":"grid w-full grid-cols-4 md:grid-cols-4 grid-cols-1 gap-2 md:gap-0 h-auto md:h-10","children":[["$","$L13",null,{"value":"overview","className":"w-full","children":["$","$L14",null,{"tabKey":"overview"}]}],["$","$L13",null,{"value":"tasks","className":"w-full","children":["$","$L14",null,{"tabKey":"tasks"}]}],["$","$L13",null,{"value":"team","className":"w-full","children":["$","$L14",null,{"tabKey":"team"}]}],["$","$L13",null,{"value":"projects","className":"w-full","children":["$","$L14",null,{"tabKey":"projects"}]}]]}],["$","$L15",null,{"value":"overview","className":"mt-6","children":["$","$L16",null,{"userRole":"admin"}]}],["$","$L15",null,{"value":"tasks","className":"mt-6","children":["$","$L17",null,{"userRole":"admin"}]}],["$","$L15",null,{"value":"team","className":"mt-6","children":["$","$L18",null,{"userRole":"admin"}]}],["$","$L15",null,{"value":"projects","className":"mt-6","children":["$","$L19",null,{"userRole":"admin"}]}]]}]]}]}]]}]
