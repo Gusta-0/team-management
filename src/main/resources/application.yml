@@ -30,10 +30,10 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:db_cliente
+    url: jdbc:h2:mem:db_team_management
     driver-class-name: org.h2.Driver
     username: sa
-    password: password
+    password:
   jpa:
     hibernate:
       ddl-auto: update
