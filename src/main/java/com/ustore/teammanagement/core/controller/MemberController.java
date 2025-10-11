@@ -1,5 +1,6 @@
 package com.ustore.teammanagement.core.controller;
 
+import com.ustore.teammanagement.config.MemberAPI;
 import com.ustore.teammanagement.core.service.MemberService;
 import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Role;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @Validated
-public class MemberController {
+public class MemberController implements MemberAPI {
     private final MemberService memberService;
 
     @PostMapping
@@ -53,6 +54,7 @@ public class MemberController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' or hasRole('MANAGER'))")
     public ResponseEntity<MemberResponse> updateMember(
             @PathVariable UUID id,
             @RequestBody @Valid MemberUpdateRequest dto

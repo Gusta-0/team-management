@@ -15,9 +15,6 @@ public record MemberUpdateRequest(
         @Email(message = "Email deve ser válido")
         String email,
 
-        @Size(min = 6, message = "Senha deve ter pelo menos 6 caracteres")
-        String NewPassword,
-
         Role role,
 
         String department,
@@ -34,17 +31,14 @@ public record MemberUpdateRequest(
         String image
 ) {
 
-    public void updateMember(Member member, PasswordEncoder passwordEncoder, MemberUpdateRequest updateRequest) {
+    public void updateMember(Member member, MemberUpdateRequest updateRequest) {
         if (updateRequest.name() != null) {
             member.setName(updateRequest.name());
         }
         if (updateRequest.email() != null) {
             member.setEmail(updateRequest.email());
         }
-        if (updateRequest.NewPassword() != null) {
-            String encryptedPassword = passwordEncoder.encode(updateRequest.NewPassword());
-            member.setPassword(encryptedPassword);
-        }
+
         if (updateRequest.role() != null) {
             member.setRole(updateRequest.role());
         }

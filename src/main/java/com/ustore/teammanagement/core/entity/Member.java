@@ -29,10 +29,12 @@ public class Member implements UserDetails {
     private String name;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
     private String department;
     private String phone;
     private OffsetDateTime joinDate;
+    @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE;
     private String image;
 
