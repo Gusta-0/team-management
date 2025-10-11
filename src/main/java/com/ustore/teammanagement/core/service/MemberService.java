@@ -34,7 +34,7 @@ public class MemberService {
         }
     }
 
-    public MemberResponse saveMember(MemberRequest memberRequest){
+    public MemberResponse saveMember(MemberRequest memberRequest) {
         emailExiste(memberRequest.email());
         var member = memberRequest.toMember();
         member.setStatus(MemberStatus.ACTIVE);
@@ -43,7 +43,7 @@ public class MemberService {
         return new MemberResponse(savedMember);
     }
 
-    public Page<MemberResponse> Search(String name, String email, Pageable pageable){
+    public Page<MemberResponse> Search(String name, String email, Pageable pageable) {
         return memberRepository.findAll(
                 MemberSpecification.withSearch(name, email),
                 pageable
@@ -65,24 +65,26 @@ public class MemberService {
         var memberLogado = memberRepository.findByEmail(emailLogado).orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
         var targetMember = memberRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Membro alvo não encontrado"));
 
-        if (!targetMember.getRole().equals(Role.ADMIN) && !targetMember.getId().equals(memberLogado.getId())) {
-            throw new AccessDeniedException("Acesso negado: você não tem permissão para atualizar este membro.");
+        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))
+                        && !targetMember.getId().equals(memberLogado.getId())
+        ) {throw new AccessDeniedException("Acesso negado: você não tem permissão para atualizar este membro.");
         }
-        memberUpdateRequest.updateMember(targetMember, passwordEncoder, memberUpdateRequest);
+        memberUpdateRequest.updateMember(targetMember, memberUpdateRequest);
 
         var updatedMember = memberRepository.save(targetMember);
         return new MemberResponse(updatedMember);
     }
 
     @Transactional
-    public void inactivateMember(UUID id) throws AccessDeniedException{
+    public void inactivateMember(UUID id) throws AccessDeniedException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String emailLogado = auth.getName();
 
         var memberLogado = memberRepository.findByEmail(emailLogado).orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
         var targetMember = memberRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Membro alvo não encontrado"));
 
-        if (!memberLogado.getRole().equals(Role.ADMIN) && !targetMember.getId().equals(memberLogado.getId())) {
+        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))
+                && !targetMember.getId().equals(memberLogado.getId())) {
             throw new AccessDeniedException("Acesso negado: você não tem permissão para inativar este membro.");
         }
 

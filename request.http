@@ -1,0 +1,31 @@
+### Criar um novo usuário
+POST http://localhost:8080/member
+Content-Type: application/json
+
+{
+  "name": "Carlos Silva",
+  "email": "carlos.silva@empresa.com",
+  "password": "HSYEjeufhrurh2343@@",
+  "role": "ADMIN",
+  "department": "TI",
+  "phone": "(83) 015401183",
+  "image": null
+},
+{
+"name": "Ana Oliveira",
+"email": "ana.oliveira@empresa.com",
+"password": "344ddssDDD@@",
+"role": "MANAGER",
+"department": "Vendas",
+"phone": "(83) 015401183",
+"image": null
+},
+{
+"name": "Roberto Santos",
+"email": "roberto.santos@empresa.com",
+"password": "RRDdfttg555.",
+"role": "MEMBER",
+"department": "Marketing",
+"phone": "(83) 015401183",
+"image": null
+}
