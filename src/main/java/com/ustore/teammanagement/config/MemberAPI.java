@@ -25,38 +25,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
-@Tag(name = "Members", description = "Member management endpoints")
+@Tag(name = "Members", description = "Endpoints for managing system members")
 public interface MemberAPI {
 
-    @Operation(summary = "Salvar novo colaborador",
-            description = "Adiciona um novo colaborador na equipe")
+    @Operation(
+            summary = "Create a new member",
+            description = "Adds a new member to the team. Only ADMIN and MANAGER roles are allowed."
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Colaborador adicionado com sucesso",
+            @ApiResponse(responseCode = "201", description = "Member successfully created",
                     content = @Content(schema = @Schema(implementation = MemberResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+            @ApiResponse(responseCode = "400", description = "Invalid data provided",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Email já cadastrado",
+            @ApiResponse(responseCode = "409", description = "Email already registered",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<MemberResponse> saveMember(@Valid @RequestBody MemberRequest memberRequest);
+    ResponseEntity<MemberResponse> saveMember(
+            @Valid @RequestBody MemberRequest memberRequest
+    );
 
-    @Operation(summary = "Pesquisar colaboradores",
-            description = "Pesquisa colaboradores por nome e/ou email")
+    @Operation(
+            summary = "Search members",
+            description = "Searches for members by name and/or email."
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de colaboradores encontrada")
+            @ApiResponse(responseCode = "200", description = "List of members found")
     })
-    public Page<MemberResponse> search(
+    Page<MemberResponse> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @ParameterObject Pageable pageable
     );
 
-    @Operation(summary = "Filtrar colaboradores",
-            description = "Filtra colaboradores por Departamento, Status e Nível de Acesso")
+    @Operation(
+            summary = "Filter members",
+            description = "Filters members by department, status, and access level."
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de colaboradores encontrada")
+            @ApiResponse(responseCode = "200", description = "Filtered list of members found")
     })
-    public Page<MemberResponse> filtrar(
+    Page<MemberResponse> filter(
             @RequestParam(required = false) String department,
             @RequestParam(required = false) MemberStatus status,
             @RequestParam(required = false) Role role,
@@ -64,38 +72,39 @@ public interface MemberAPI {
     );
 
     @Operation(
-            summary = "Atualizar dados do colaborador",
-            description = "Atualiza os dados de um colaborador existente. " +
-                    "Usuários comuns só podem alterar os próprios dados. " +
-                    "Admins e Gerentes podem alterar qualquer colaborador."
+            summary = "Update member information",
+            description = "Updates a member's information. Regular users can update only their own data. "
+                    + "Admins and Managers can update any member."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso",
+            @ApiResponse(responseCode = "200", description = "Member successfully updated",
                     content = @Content(schema = @Schema(implementation = MemberResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos",
+            @ApiResponse(responseCode = "400", description = "Invalid data provided",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "Sem permissão para atualizar este colaborador",
+            @ApiResponse(responseCode = "403", description = "Access denied",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Colaborador não encontrado",
+            @ApiResponse(responseCode = "404", description = "Member not found",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<MemberResponse> updateMember(
-            @Parameter(description = "ID do colaborador a ser atualizado", required = true)
+    ResponseEntity<MemberResponse> updateMember(
+            @Parameter(description = "ID of the member to be updated", required = true)
             @PathVariable UUID id,
-            @RequestBody @Valid MemberUpdateRequest dto
+            @Valid @RequestBody MemberUpdateRequest dto
     ) throws AccessDeniedException;
 
     @Operation(
-            summary = "Inativar colaborador",
-            description = "Inativa um colaborador (delete lógico). " +
-                    "Apenas Admins e Gerentes têm permissão para esta ação."
+            summary = "Inactivate a member",
+            description = "Logically inactivates a member. Only Admins and Managers have permission for this action."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Colaborador inativado com sucesso"),
-            @ApiResponse(responseCode = "403", description = "Sem permissão para inativar este colaborador",
+            @ApiResponse(responseCode = "204", description = "Member successfully inactivated"),
+            @ApiResponse(responseCode = "403", description = "Access denied",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Colaborador não encontrado",
+            @ApiResponse(responseCode = "404", description = "Member not found",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public void inactivate(@PathVariable UUID id) throws AccessDeniedException;
+    void inactivate(
+            @Parameter(description = "ID of the member to inactivate", required = true)
+            @PathVariable UUID id
+    ) throws AccessDeniedException;
 }

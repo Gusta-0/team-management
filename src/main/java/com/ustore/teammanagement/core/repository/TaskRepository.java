@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificationExecutor<Task> {
     long countByStatus(TaskStatus status);
 
-    long countByStatusIn(List<TaskStatus> statuses);
+    long countByStatusIn(List<TaskStatus> status);
 }

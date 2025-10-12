@@ -14,11 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
+
 import java.util.UUID;
 
 @RestController
@@ -28,23 +29,25 @@ import java.util.UUID;
 public class MemberController implements MemberAPI {
     private final MemberService memberService;
 
+
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN' or hasRole('MANAGER'))")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<MemberResponse> saveMember(@Valid @RequestBody MemberRequest memberRequest) {
-        return ResponseEntity.ok(memberService.saveMember(memberRequest));
+        MemberResponse response = memberService.saveMember(memberRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/member/search")
+    @GetMapping("/search")
     public Page<MemberResponse> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @ParameterObject Pageable pageable
     ) {
-        return memberService.Search(name, email, pageable);
+        return memberService.search(name, email, pageable);
     }
 
-    @GetMapping("/member/filter")
-    public Page<MemberResponse> filtrar(
+    @GetMapping("/filter")
+    public Page<MemberResponse> filter(
             @RequestParam(required = false) String department,
             @RequestParam(required = false) MemberStatus status,
             @RequestParam(required = false) Role role,
@@ -54,18 +57,18 @@ public class MemberController implements MemberAPI {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN' or hasRole('MANAGER'))")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<MemberResponse> updateMember(
             @PathVariable UUID id,
-            @RequestBody @Valid MemberUpdateRequest dto
+            @Valid @RequestBody MemberUpdateRequest dto
     ) throws AccessDeniedException {
-        MemberResponse update = memberService.update(id, dto);
-        return ResponseEntity.ok(update);
+        MemberResponse updated = memberService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('ADMIN' or hasRole('MANAGER'))")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public void inactivate(@PathVariable UUID id) throws AccessDeniedException {
         memberService.inactivateMember(id);
     }
