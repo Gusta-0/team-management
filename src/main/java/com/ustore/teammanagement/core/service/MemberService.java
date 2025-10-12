@@ -14,12 +14,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 @Service
@@ -43,7 +43,7 @@ public class MemberService {
         return new MemberResponse(savedMember);
     }
 
-    public Page<MemberResponse> Search(String name, String email, Pageable pageable) {
+    public Page<MemberResponse> search(String name, String email, Pageable pageable) {
         return memberRepository.findAll(
                 MemberSpecification.withSearch(name, email),
                 pageable
