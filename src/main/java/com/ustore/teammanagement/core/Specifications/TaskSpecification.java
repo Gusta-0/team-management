@@ -4,6 +4,8 @@ import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.enums.Priority;
 import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.request.TaskFilterRequest;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -31,7 +33,7 @@ public class TaskSpecification {
 
     public static Specification<Task> withAssignee(UUID assigneeId) {
         return (root, query, cb) ->
-                assigneeId == null ? null : cb.equal(root.join("assignee").get("id"), assigneeId);
+                assigneeId == null ? null : cb.equal(root.join("assignee", JoinType.LEFT).get("id"), assigneeId);
     }
 
     public static Specification<Task> withProject(String project) {
@@ -42,20 +44,11 @@ public class TaskSpecification {
         };
     }
 
-    public static Specification<Task> withTag(String tag) {
-        return (root, query, cb) -> {
-            if (tag == null || tag.isBlank()) return null;
-            String like = "%" + tag.toLowerCase() + "%";
-            // Assuming tags is a collection of strings
-            return cb.isMember(tag.toLowerCase(), root.get("tags"));
-        };
-    }
-
     public static Specification<Task> withAssigneeName(String assigneeName) {
         return (root, query, cb) -> {
             if (assigneeName == null || assigneeName.isBlank()) return null;
             String like = "%" + assigneeName.toLowerCase() + "%";
-            return cb.like(cb.lower(root.join("assignee").get("name")), like);
+            return cb.like(cb.lower(root.join("assignee", JoinType.LEFT).get("name")), like);
         };
     }
 
@@ -63,7 +56,7 @@ public class TaskSpecification {
         return (root, query, cb) -> {
             if (createdByName == null || createdByName.isBlank()) return null;
             String like = "%" + createdByName.toLowerCase() + "%";
-            return cb.like(cb.lower(root.join("createdBy").get("name")), like);
+            return cb.like(cb.lower(root.join("createdBy", JoinType.LEFT).get("name")), like);
         };
     }
 
@@ -89,19 +82,31 @@ public class TaskSpecification {
         };
     }
 
-    public static Specification<Task> withFilters(TaskFilterRequest filter) {
-        return Specification.allOf(
-                withAssigneeName(filter.assigneeName()),
-                withCreatedByName(filter.createdByName()),
-                withTitle(filter.title()),
-                withProject(filter.project()),
-                withTag(filter.tag()),
-                withStatus(filter.status()),
-                withPriority(filter.priority()),
-                withAssignee(filter.assigneeId()),
-                withDueDateRange(filter.dueDateFrom(), filter.dueDateTo()),
-                onlyOverdue(filter.onlyOverdue())
+    public static Specification<Task> withFilters(String title, String project, TaskStatus status, Priority priority,  String assigneeName, String createdByName, LocalDate dueDateFrom, LocalDate dueDateTo, Boolean onlyOverdue ) {
+        return Specification.anyOf(
+                withTitle(title),
+                withProject(project),
+                withStatus(status),
+                withPriority(priority),
+                withAssigneeName(assigneeName),
+                withCreatedByName(createdByName),
+                withDueDateRange(dueDateFrom, dueDateTo),
+                onlyOverdue(onlyOverdue)
         );
     }
-}
 
+
+//    public static Specification<Task> withFilters(TaskFilterRequest filter) {
+//        return Specification.allOf(
+//                withAssigneeName(filter.assigneeName()),
+//                withCreatedByName(filter.createdByName()),
+//                withTitle(filter.title()),
+//                withProject(filter.project()),
+//                withStatus(filter.status()),
+//                withPriority(filter.priority()),
+//                withAssignee(filter.assigneeId()),
+//                withDueDateRange(filter.dueDateFrom(), filter.dueDateTo()),
+//                onlyOverdue(filter.onlyOverdue())
+//        );
+//    }
+}

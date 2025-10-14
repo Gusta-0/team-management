@@ -29,7 +29,6 @@ import java.util.UUID;
 public class MemberController implements MemberAPI {
     private final MemberService memberService;
 
-
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<MemberResponse> saveMember(@Valid @RequestBody MemberRequest memberRequest) {

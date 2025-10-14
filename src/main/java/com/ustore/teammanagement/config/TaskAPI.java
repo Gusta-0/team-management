@@ -1,5 +1,7 @@
 package com.ustore.teammanagement.config;
 
+import com.ustore.teammanagement.enums.Priority;
+import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.request.TaskFilterRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskUpdateRequest;
@@ -10,10 +12,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Tag(name = "Tasks", description = "Endpoints for managing tasks")
@@ -39,21 +44,42 @@ public interface TaskAPI {
                             content = @Content(schema = @Schema(implementation = Page.class)))
             }
     )
-    ResponseEntity<Page<TaskResponse>> filterTasks(TaskFilterRequest filter, Pageable pageable);
+    public ResponseEntity<Page<TaskResponse>> filterTasks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String project,
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) Priority priority,
+            @RequestParam(required = false) String assigneeName,
+            @RequestParam(required = false) String createdByName,
+            @RequestParam(required = false) LocalDate dueDateFrom,
+            @RequestParam(required = false) LocalDate dueDateTo,
+            @RequestParam(required = false) Boolean onlyOverdue,
+            @ParameterObject Pageable pageable
+    );
+
 
     @Operation(
             summary = "Update an existing task",
-            description = "Allows ADMIN and MANAGER users to update a task.",
+            description = "Allows any authenticated user to update a task.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Task successfully updated",
-                            content = @Content(schema = @Schema(implementation = TaskResponse.class))),
-                    @ApiResponse(responseCode = "403", description = "Access denied"),
-                    @ApiResponse(responseCode = "404", description = "Task not found")
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task successfully updated",
+                            content = @Content(schema = @Schema(implementation = TaskResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Task not found"
+                    )
             }
     )
     ResponseEntity<TaskResponse> updateTask(
-            @Parameter(description = "Task ID") UUID id,
-            TaskUpdateRequest request);
+            @Parameter(description = "Task ID", required = true)
+            UUID id,
+            @Parameter(description = "Task data to update", required = true)
+            TaskUpdateRequest request
+    );
+
 
     @Operation(
             summary = "Delete a task",

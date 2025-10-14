@@ -18,6 +18,7 @@ public record TaskRequest (
         @Size(min = 2, max = 200, message = "Título deve ter entre 2 e 200 caracteres")
         String title,
 
+        @NotBlank(message = "Descrição é obrigatória")
         @Size(max = 4000, message = "Descrição deve ter no máximo 4000 caracteres")
         String description,
 
