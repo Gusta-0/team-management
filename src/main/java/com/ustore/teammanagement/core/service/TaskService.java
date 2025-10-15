@@ -4,11 +4,11 @@ import com.ustore.teammanagement.core.Specifications.TaskSpecification;
 import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
+import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Priority;
 import com.ustore.teammanagement.enums.Role;
 import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.exception.ResourceNotFoundException;
-import com.ustore.teammanagement.payload.dto.request.TaskFilterRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.TaskResponse;
@@ -19,7 +19,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -44,10 +43,13 @@ public class TaskService {
 
         var task = request.toTask();
         task.setCreatedBy(memberLogado);
-        task.setStatus(TaskStatus.TO_DO);
 
         Member assignee = memberRepository.findById(request.assigneeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Responsável não encontrado"));
+
+        if (assignee.getStatus() == MemberStatus.INACTIVE) {
+            throw new IllegalStateException("Tarefa não pode ser atribuída a um membro desativado.");
+        }
 
         task.setAssignee(assignee);
         var savedTask = taskRepository.save(task);
@@ -65,10 +67,13 @@ public class TaskService {
     public TaskResponse updateTask(UUID taskId, TaskUpdateRequest updateRequest) {
         var task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada"));
-
         updateRequest.updateTask(task, updateRequest);
-        taskRepository.save(task);
 
+        if (task.getAssignee() != null && task.getAssignee().getStatus() == MemberStatus.INACTIVE) {
+            throw new IllegalStateException("Tarefa não pode ser atribuída a um membro desativado.");
+        }
+
+        taskRepository.save(task);
         return new TaskResponse(task);
     }
 
