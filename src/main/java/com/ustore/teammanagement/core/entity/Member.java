@@ -1,5 +1,6 @@
 package com.ustore.teammanagement.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Role;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class Member implements UserDetails {
     private UUID id;
     private String name;
     private String email;
-    private String password;
+    @JsonIgnore private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
     private String department;

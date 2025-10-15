@@ -48,13 +48,4 @@ public class MemberSpecification {
         );
     }
 
-    public static Specification<Member> withAllFilters(MemberFilter filter) {
-        return Specification.allOf(
-                withName(filter.name()),
-                withEmail(filter.email()),
-                withDepartment(filter.department()),
-                withStatus(filter.status()),
-                withRole(filter.role())
-        );
-    }
 }

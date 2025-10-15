@@ -10,22 +10,70 @@ Content-Type: application/json
   "department": "TI",
   "phone": "(83) 015401183",
   "image": null
-},
-{
-"name": "Ana Oliveira",
-"email": "ana.oliveira@empresa.com",
-"password": "344ddssDDD@@",
-"role": "MANAGER",
-"department": "Vendas",
-"phone": "(83) 015401183",
-"image": null
-},
-{
-"name": "Roberto Santos",
-"email": "roberto.santos@empresa.com",
-"password": "RRDdfttg555.",
-"role": "MEMBER",
-"department": "Marketing",
-"phone": "(83) 015401183",
-"image": null
 }
+
+### Login de usuário (gera token JWT)
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "carlos.silva@empresa.com",
+  "password": "HSYEjeufhrurh2343@@"
+}
+
+### Atualizar dados de um usuário
+PATCH http://localhost:8080/member/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsb3Muc2lsdmFAZW1wcmVzYS5jb20iLCJpYXQiOjE3NjAzNjM4NTksImV4cCI6MTc2MDM2NzQ1OX0.dUIJrZt_lLxvu_aAp_9ERGAgjNIet6RLBp4oO_sUVNA
+
+{
+  "department": "TI",
+  "status": "INACTIVE"
+}
+
+### Inativar usuário (DELETE por ID)
+DELETE http://localhost:8080/member/{{id}}
+Authorization: Bearer {{token}}
+
+
+### Criar Tarefa
+POST http://localhost:8080/tasks
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "title": "Implementar autenticação",
+  "description": "Desenvolver o sistema de login para usuários.",
+  "status": "TO_DO",
+  "priority": "HIGH",
+  "dueDate": "2025-10-13",
+  "project": "Portal RH",
+  "tags": [
+    "backend",
+    "segurança"
+  ],
+  "assigneeId": "1b90fa9c-99e2-46da-859f-5eaa559d9535"
+}
+
+### Atualizar Tarefa
+PATCH http://localhost:8080/api/tarefas/{{taskId}}
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+"title": "Implementar autenticação",
+"description": "Desenvolver o sistema de login para usuários.",
+"status": "TO_DO",
+"priority": "HIGH",
+"dueDate": "2025-10-13",
+"project": "Portal RH",
+"tags": [
+"backend",
+"segurança"
+],
+"assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+
+### Inativar usuário (DELETE por ID)
+DELETE http://localhost:8080/tasks/{{id}}
+Authorization: Bearer {{token}}
