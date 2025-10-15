@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +39,17 @@ public class Member implements UserDetails {
     @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE;
     private String image;
+
+    @Builder.Default
+    @Column(name = "failed_attempts")
+    private Integer failedAttempts = 0;
+
+    @Builder.Default
+    @Column(name = "account_locked")
+    private Boolean accountLocked = false;
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
 
     @PrePersist
     public void prePersist() {

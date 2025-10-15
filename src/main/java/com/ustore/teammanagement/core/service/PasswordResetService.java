@@ -1,6 +1,7 @@
 package com.ustore.teammanagement.core.service;
 
 
+import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.PasswordResetToken;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.PasswordResetTokenRepository;
@@ -12,13 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
@@ -34,17 +35,61 @@ public class PasswordResetService {
 
 
     public String authenticationLogin(LoginRequest dto) {
+        Member user = memberRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new UnauthorizedException("Usuário ou senha inválidos."));
+
+        if (Boolean.TRUE.equals(user.getAccountLocked())){
+
+            LocalDateTime unlockTime = user.getLockTime().plusMinutes(15);
+            if (LocalDateTime.now().isBefore(unlockTime)) {
+                long minutesRemaining = ChronoUnit.MINUTES.between(LocalDateTime.now(), unlockTime);
+                throw new UnauthorizedException(
+                        "Conta bloqueada devido a múltiplas tentativas malsucedidas. " +
+                                "Tente novamente em " + minutesRemaining + " minutos."
+                );
+            } else {
+                user.setAccountLocked(false);
+                user.setFailedAttempts(0);
+                user.setLockTime(null);
+                memberRepository.save(user);
+            }
+        }
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.email(), dto.password())
             );
 
+            user.setFailedAttempts(0);
+            user.setAccountLocked(false);
+            user.setLockTime(null);
+            memberRepository.save(user);
+
             return jwtUtil.generateToken(authentication.getName());
 
-        } catch (BadCredentialsException | UsernameNotFoundException | AuthorizationDeniedException e) {
-            throw new UnauthorizedException("Usuário ou senha inválidos", e);
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
+            int attempts = user.getFailedAttempts() + 1;
+            user.setFailedAttempts(attempts);
+
+            if (attempts >= 3) {
+                user.setAccountLocked(true);
+                user.setLockTime(LocalDateTime.now());
+                memberRepository.save(user);
+
+                throw new UnauthorizedException(
+                        "Sua conta foi bloqueada após 3 tentativas inválidas. " +
+                                "Tente novamente em 15 minutos."
+                );
+            } else {
+                memberRepository.save(user);
+                throw new UnauthorizedException(
+                        "Usuário ou senha inválidos. Tentativa " + attempts + " de 3."
+                );
+            }
         }
     }
+
+
 
     public String passwordRecovery(String email) {
         var member = memberRepository.findByEmail(email)
