@@ -1,7 +1,6 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.Specifications.MemberSpecification;
-import com.ustore.teammanagement.core.entity.MemberFilter;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Role;

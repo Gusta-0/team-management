@@ -6,7 +6,6 @@ import com.ustore.teammanagement.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record MemberUpdateRequest(
         @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")

@@ -52,7 +52,7 @@ public class DashboardService {
                         task.getTitle(),
                         task.getUpdatedAt()
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private String getActionLabel(Task task) {

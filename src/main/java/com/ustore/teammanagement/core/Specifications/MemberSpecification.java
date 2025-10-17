@@ -1,12 +1,15 @@
 package com.ustore.teammanagement.core.Specifications;
 
 import com.ustore.teammanagement.core.entity.Member;
-import com.ustore.teammanagement.core.entity.MemberFilter;
 import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Role;
 import org.springframework.data.jpa.domain.Specification;
 
 public class MemberSpecification {
+
+    private MemberSpecification() {
+        throw new UnsupportedOperationException("Classe utilitária, não instancie.");
+    }
 
     public static Specification<Member> withName(String name) {
         return (root, query, cb) ->
