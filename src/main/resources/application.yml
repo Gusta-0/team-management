@@ -51,3 +51,14 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+---
+
+logging:
+  level:
+    root: INFO
+    com.ustore.teammanagement: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+  file:
+    name: logs/app.log

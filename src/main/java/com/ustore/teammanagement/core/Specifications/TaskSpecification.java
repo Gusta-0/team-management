@@ -3,8 +3,6 @@ package com.ustore.teammanagement.core.Specifications;
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.enums.Priority;
 import com.ustore.teammanagement.enums.TaskStatus;
-import com.ustore.teammanagement.payload.dto.request.TaskFilterRequest;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -12,6 +10,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class TaskSpecification {
+
+    private TaskSpecification() {
+        throw new UnsupportedOperationException("Classe utilitária, não instancie.");
+    }
+
+    private static final String DUE_DATE = "dueDate";
 
     public static Specification<Task> withTitle(String title) {
         return (root, query, cb) -> {
@@ -63,13 +67,13 @@ public class TaskSpecification {
     public static Specification<Task> withDueDateRange(LocalDate from, LocalDate to) {
         return (root, query, cb) -> {
             if (from != null && to != null) {
-                return cb.between(root.get("dueDate"), from, to);
+                return cb.between(root.get(DUE_DATE), from, to);
             }
             if (from != null) {
-                return cb.greaterThanOrEqualTo(root.get("dueDate"), from);
+                return cb.greaterThanOrEqualTo(root.get(DUE_DATE), from);
             }
             if (to != null) {
-                return cb.lessThanOrEqualTo(root.get("dueDate"), to);
+                return cb.lessThanOrEqualTo(root.get(DUE_DATE), to);
             }
             return null;
         };
@@ -78,7 +82,7 @@ public class TaskSpecification {
     public static Specification<Task> onlyOverdue(Boolean onlyOverdue) {
         return (root, query, cb) -> {
             if (onlyOverdue == null || !onlyOverdue) return null;
-            return cb.lessThan(root.get("dueDate"), LocalDate.now());
+            return cb.lessThan(root.get(DUE_DATE), LocalDate.now());
         };
     }
 
@@ -95,18 +99,4 @@ public class TaskSpecification {
         );
     }
 
-
-//    public static Specification<Task> withFilters(TaskFilterRequest filter) {
-//        return Specification.allOf(
-//                withAssigneeName(filter.assigneeName()),
-//                withCreatedByName(filter.createdByName()),
-//                withTitle(filter.title()),
-//                withProject(filter.project()),
-//                withStatus(filter.status()),
-//                withPriority(filter.priority()),
-//                withAssignee(filter.assigneeId()),
-//                withDueDateRange(filter.dueDateFrom(), filter.dueDateTo()),
-//                onlyOverdue(filter.onlyOverdue())
-//        );
-//    }
 }

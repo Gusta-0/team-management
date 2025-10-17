@@ -10,6 +10,8 @@ import com.ustore.teammanagement.exception.UnauthorizedException;
 import com.ustore.teammanagement.payload.dto.request.LoginRequest;
 import com.ustore.teammanagement.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,15 +34,18 @@ public class PasswordResetService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final MemberRepository memberRepository;
+    private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
 
 
     public String authenticationLogin(LoginRequest dto) {
         Member user = memberRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new UnauthorizedException("Usuário ou senha inválidos."));
+                .orElseThrow(() ->
+                     new UnauthorizedException("Usuário ou senha inválidos.")
+                );
 
-        if (Boolean.TRUE.equals(user.getAccountLocked())){
-
+        if (Boolean.TRUE.equals(user.getAccountLocked())) {
             LocalDateTime unlockTime = user.getLockTime().plusMinutes(15);
+
             if (LocalDateTime.now().isBefore(unlockTime)) {
                 long minutesRemaining = ChronoUnit.MINUTES.between(LocalDateTime.now(), unlockTime);
                 throw new UnauthorizedException(
@@ -76,24 +81,22 @@ public class PasswordResetService {
                 user.setLockTime(LocalDateTime.now());
                 memberRepository.save(user);
 
+                logger.error("Conta bloqueada para {} após {} tentativas.", dto.email(), attempts);
                 throw new UnauthorizedException(
-                        "Sua conta foi bloqueada após 3 tentativas inválidas. " +
-                                "Tente novamente em 15 minutos."
+                        "Sua conta foi bloqueada após 3 tentativas inválidas. Tente novamente em 15 minutos."
                 );
             } else {
                 memberRepository.save(user);
-                throw new UnauthorizedException(
-                        "Usuário ou senha inválidos. Tentativa " + attempts + " de 3."
-                );
+                throw new UnauthorizedException("Usuário ou senha inválidos. Tentativa " + attempts + " de 3.");
             }
         }
     }
 
-
-
     public String passwordRecovery(String email) {
         var member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() ->
+                     new ResourceNotFoundException("Usuário não encontrado")
+                );
 
         String token = UUID.randomUUID().toString();
         LocalDateTime expiry = LocalDateTime.now().plusHours(1);
@@ -105,7 +108,6 @@ public class PasswordResetService {
 
         tokenRepository.save(resetToken);
 
-        System.out.println("Token gerado (teste): " + token);
         return token;
     }
 
@@ -115,7 +117,10 @@ public class PasswordResetService {
         }
 
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new ResourceNotFoundException("Token inválido"));
+                .orElseThrow(() -> {
+                    logger.error("Token de redefinição inválido: {}", token);
+                    return new ResourceNotFoundException("Token inválido");
+                });
 
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Token expirado");
@@ -124,7 +129,6 @@ public class PasswordResetService {
         var member = resetToken.getMember();
         member.setPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
-
         tokenRepository.delete(resetToken);
     }
 }
