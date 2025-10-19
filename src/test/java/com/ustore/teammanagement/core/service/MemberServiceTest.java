@@ -208,5 +208,4 @@ class MemberServiceTest {
         verify(updateRequest, times(1)).updateMember(targetMember, updateRequest);
         verify(memberRepository, times(1)).save(targetMember);
     }
-
 }
