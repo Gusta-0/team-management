@@ -29,7 +29,7 @@ public class MemberService {
 
     public void emailExiste(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
-            throw new ConflictException("Email" + email + "já cadastrado!");
+            throw new ConflictException("Email " + email + " já cadastrado!");
         }
     }
 

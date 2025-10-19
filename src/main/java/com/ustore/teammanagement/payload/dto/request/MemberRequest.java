@@ -1,7 +1,6 @@
 package com.ustore.teammanagement.payload.dto.request;
 
 import com.ustore.teammanagement.core.entity.Member;
-import com.ustore.teammanagement.enums.Role;
 import jakarta.validation.constraints.*;
 
 public record MemberRequest(
@@ -21,8 +20,7 @@ public record MemberRequest(
         )
         String password,
 
-        @NotNull(message = "Cargo é obrigatório")
-        Role role,
+        String role,
 
         @NotBlank(message = "Departamento é obrigatório")
         String department,
@@ -42,7 +40,7 @@ public record MemberRequest(
                 member.getName(),
                 member.getEmail(),
                 member.getPassword(),
-                member.getRole(),
+                member.getRole().name(),
                 member.getDepartment(),
                 member.getPhone(),
                 member.getImage()
@@ -54,7 +52,7 @@ public record MemberRequest(
                 .name(this.name)
                 .email(this.email)
                 .password(this.password)
-                .role(this.role)
+                .role(this.role != null ? Enum.valueOf(com.ustore.teammanagement.enums.Role.class, this.role) : com.ustore.teammanagement.enums.Role.MEMBER)
                 .department(this.department)
                 .phone(this.phone)
                 .image(this.image)
