@@ -2,10 +2,13 @@ package com.ustore.teammanagement.core.repository;
 
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.enums.TaskStatus;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +18,14 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
     long countByStatusNot(TaskStatus status);
     long countByStatusIn(List<TaskStatus> statuses);
     List<Task> findTop5ByOrderByUpdatedAtDesc();
+
+    @Query("""
+        SELECT t FROM Task t
+        WHERE t.status IN ('CREATED', 'COMPLETED')
+        ORDER BY COALESCE(t.updatedAt, t.createdAt) DESC
+        """)
+    List<Task> findTop5RecentTasks(Pageable pageable);
+
     List<Task> findByStatusInAndDueDateBefore(List<TaskStatus> statuses, LocalDate date);
 
     @Query(value = """
@@ -32,7 +43,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
 
 
     @Query(value = """
-    SELECT 
+    SELECT
         m.department AS department,
         COUNT(*) FILTER (WHERE t.status = 'COMPLETED') AS completed,
         COUNT(*) FILTER (WHERE t.status != 'COMPLETED') AS pending

@@ -8,6 +8,8 @@ import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.response.ActivityResponse;
 import com.ustore.teammanagement.payload.dto.response.DashboardResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,23 +46,26 @@ public class DashboardService {
     }
 
     public List<ActivityResponse> getRecentActivities() {
-        return taskRepository.findTop5ByOrderByUpdatedAtDesc()
+        // Cria um pageable para limitar a 5 resultados
+        Pageable pageable = PageRequest.of(0, 5);
+
+        return taskRepository.findTop5RecentTasks(pageable)
                 .stream()
                 .map(task -> new ActivityResponse(
                         task.getCreatedBy() != null ? task.getCreatedBy().getName() : "Desconhecido",
                         getActionLabel(task),
                         task.getTitle(),
-                        task.getUpdatedAt()
+                        task.getUpdatedAt() != null ? task.getUpdatedAt() : task.getCreatedAt()
                 ))
                 .toList();
     }
 
+
     private String getActionLabel(Task task) {
         return switch (task.getStatus()) {
-            case COMPLETED -> "concluiu";
-            case REVISION -> "enviou para revisão";
-            case IN_PROGRESSO -> "atualizou";
-            default -> "criou";
+            case COMPLETED -> "concluiu a tarefa";
+            case TO_DO -> "criou a tarefa";
+            default -> "";
         };
     }
 }
