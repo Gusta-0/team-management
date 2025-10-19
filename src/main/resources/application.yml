@@ -10,10 +10,10 @@ spring:
       on-profile: prod
 
   datasource:
-    url: jdbc:postgresql://db:5432/mydatabase
+    url: jdbc:postgresql://dpg-d3qj546r433s73e3pa9g-a:5432/teammanager_ygig
     driver-class-name: org.postgresql.Driver
-    username: manager
-    password: manager123
+    username: admin
+    password: 0HinuiHikVoLI7nRYelamlcU4T19aVbP
 
   jpa:
     hibernate:
