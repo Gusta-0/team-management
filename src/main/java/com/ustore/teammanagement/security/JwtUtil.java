@@ -12,11 +12,9 @@ import java.util.Date;
 @Service
 public class JwtUtil {
 
-    private SecretKey getSecretKey() {
-        String secretKey = System.getenv("JWT_SECRET");
-        if (secretKey == null || secretKey.isBlank()) {
-            throw new IllegalStateException("JWT_SECRET environment variable is not set");
-        }
+    private final String secretKey = "c3VhLWNoYXZlLXNlY3JldGEtc3VwZXItc2VndXJhLXF1ZS1kZXZlLXNlci1iZW0tbG9uZ2E=";
+
+    private SecretKey getSecretKey(){
         byte[] key = Base64.getDecoder().decode(secretKey);
         return Keys.hmacShaKeyFor(key);
     }
