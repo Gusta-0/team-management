@@ -9,10 +9,11 @@ spring:
     activate:
       on-profile: prod
 
-
   datasource:
-    url: ${postgresql://postgres:KSTxBDePaVrZwelKzUuRuemklFOBHgGx@centerbeam.proxy.rlwy.net:53645/railway}
+    url: ${URL_DO_BANCO_DE_DADOS}
     driver-class-name: org.postgresql.Driver
+    username: ${PGUSER}
+    password: ${POSTGRES_PASSWORD}
 
   jpa:
     hibernate:
