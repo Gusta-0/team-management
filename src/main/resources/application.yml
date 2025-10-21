@@ -10,10 +10,8 @@ spring:
       on-profile: prod
 
   datasource:
-    url: ${URL_DO_BANCO_DE_DADOS}
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
-    username: ${PGUSER}
-    password: ${POSTGRES_PASSWORD}
 
   jpa:
     hibernate:
