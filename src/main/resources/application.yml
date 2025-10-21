@@ -9,18 +9,18 @@ spring:
     activate:
       on-profile: prod
 
+
   datasource:
-    url: jdbc:postgresql://dpg-d3qj546r433s73e3pa9g-a:5432/teammanager_ygig
+    url: ${postgresql://postgres:KSTxBDePaVrZwelKzUuRuemklFOBHgGx@centerbeam.proxy.rlwy.net:53645/railway}
     driver-class-name: org.postgresql.Driver
-    username: admin
-    password: 0HinuiHikVoLI7nRYelamlcU4T19aVbP
 
   jpa:
     hibernate:
       ddl-auto: update
-      format_sql: true
     show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
