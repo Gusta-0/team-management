@@ -1,6 +1,32 @@
 spring:
   profiles:
-    active: prod
+    active: teste
+
+---
+spring:
+  config:
+    activate:
+      on-profile: teste
+
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+
 
 ---
 spring:
