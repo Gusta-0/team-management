@@ -1,13 +1,12 @@
 spring:
   profiles:
-    active: teste
+    active: prod
 
 ---
-
 spring:
   config:
     activate:
-      on-profile: teste
+      on-profile: prod
 
   datasource:
     url: jdbc:postgresql://db:5432/mydatabase
@@ -20,68 +19,11 @@ spring:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate.format_sql: true
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
-  datasource:
-    url: jdbc:h2:mem:db_team_management
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
       hibernate:
         format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-
----
+      dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
     root: INFO
-    com.ustore.teammanagement: DEBUG
-    org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
-  file:
-    name: logs/app.log
