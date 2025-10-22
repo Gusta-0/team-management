@@ -46,11 +46,11 @@ public class DashboardService {
     }
 
     public List<ActivityResponse> getRecentActivities() {
-        // Cria um pageable para limitar a 5 resultados
         Pageable pageable = PageRequest.of(0, 5);
 
         return taskRepository.findTop5RecentTasks(pageable)
                 .stream()
+                .filter(task -> task.getStatus() == TaskStatus.TO_DO || task.getStatus() == TaskStatus.COMPLETED)
                 .map(task -> new ActivityResponse(
                         task.getCreatedBy() != null ? task.getCreatedBy().getName() : "Desconhecido",
                         getActionLabel(task),

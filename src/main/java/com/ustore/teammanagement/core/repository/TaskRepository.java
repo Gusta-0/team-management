@@ -21,7 +21,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
 
     @Query("""
         SELECT t FROM Task t
-        WHERE t.status IN ('CREATED', 'COMPLETED')
+        WHERE t.status IN ('TO_DO', 'COMPLETED')
         ORDER BY COALESCE(t.updatedAt, t.createdAt) DESC
         """)
     List<Task> findTop5RecentTasks(Pageable pageable);
