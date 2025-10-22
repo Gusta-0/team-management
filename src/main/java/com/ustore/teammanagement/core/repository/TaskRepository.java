@@ -34,7 +34,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
         COUNT(*) FILTER (WHERE t.status IN ('TO_DO', 'IN_PROGRESS', 'REVISION', 'LATE')) AS created,
         COUNT(*) FILTER (WHERE t.status = 'COMPLETED') AS completed
     FROM tasks t
-    WHERE t.created_at >= NOW() - INTERVAL :days || ' days'
+    WHERE t.created_at >= NOW() - make_interval(days => :days)
     GROUP BY DATE_TRUNC('day', t.created_at)
     ORDER BY date
 """, nativeQuery = true)
@@ -42,16 +42,19 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
 
 
 
+
     @Query(value = """
     SELECT
         m.department AS department,
         COUNT(*) FILTER (WHERE t.status = 'COMPLETED') AS completed,
-        COUNT(*) FILTER (WHERE t.status != 'COMPLETED') AS pending
-    FROM tasks t
-    JOIN members m ON t.assignee_id = m.id
+        COUNT(*) FILTER (WHERE t.status != 'COMPLETED' OR t.status IS NULL) AS pending
+    FROM members m
+    LEFT JOIN tasks t ON t.assignee_id = m.id
+    WHERE m.department IS NOT NULL
     GROUP BY m.department
     ORDER BY m.department
 """, nativeQuery = true)
     List<Object[]> findDepartmentPerformance();
+
 
 }
