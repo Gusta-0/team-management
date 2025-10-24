@@ -1,13 +1,11 @@
 package com.ustore.teammanagement.core.controller;
 
-
 import com.ustore.teammanagement.config.AuthAPI;
 import com.ustore.teammanagement.core.service.PasswordResetService;
 import com.ustore.teammanagement.payload.dto.request.LoginRequest;
 import com.ustore.teammanagement.payload.dto.request.PasswordRecoveryRequest;
 import com.ustore.teammanagement.payload.dto.request.ResetPasswordRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController implements AuthAPI {
 
     private final PasswordResetService passwordResetService;
+
+    public AuthController(PasswordResetService passwordResetService) {
+        this.passwordResetService = passwordResetService;
+    }
 
     @Override
     @PostMapping("/login")

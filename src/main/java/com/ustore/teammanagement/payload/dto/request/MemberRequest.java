@@ -1,7 +1,11 @@
 package com.ustore.teammanagement.payload.dto.request;
 
 import com.ustore.teammanagement.core.entity.Member;
-import jakarta.validation.constraints.*;
+import com.ustore.teammanagement.core.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record MemberRequest(
         @NotBlank(message = "Nome é obrigatório")
@@ -52,7 +56,7 @@ public record MemberRequest(
                 .name(this.name)
                 .email(this.email)
                 .password(this.password)
-                .role(this.role != null ? Enum.valueOf(com.ustore.teammanagement.enums.Role.class, this.role) : com.ustore.teammanagement.enums.Role.MEMBER)
+                .role(this.role != null ? Enum.valueOf(Role.class, this.role) : Role.MEMBER)
                 .department(this.department)
                 .phone(this.phone)
                 .image(this.image)

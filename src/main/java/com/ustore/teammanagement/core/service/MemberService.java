@@ -1,16 +1,15 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.Specifications.MemberSpecification;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.core.repository.MemberRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
-import com.ustore.teammanagement.exception.ConflictException;
-import com.ustore.teammanagement.exception.ResourceNotFoundException;
+import com.ustore.teammanagement.exceptions.ConflictException;
+import com.ustore.teammanagement.exceptions.ResourceNotFoundException;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,10 +21,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void emailExiste(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
