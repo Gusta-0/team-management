@@ -1,0 +1,90 @@
+{
+  "name": "Mariana Andrade",
+  "email": "mariana.andrade@corp.com",
+  "password": "Mariana@12345",
+  "role": "MANAGER",
+  "department": "Recursos Humanos",
+  "phone": "(11) 99854-1123",
+  "image": null
+}
+{
+  "name": "João Pereira",
+  "email": "joao.pereira@techlabs.com",
+  "password": "Joao#445566",
+  "role": "MEMBER",
+  "department": "Desenvolvimento",
+  "phone": "(21) 98544-2222",
+  "image": null
+}
+{
+  "name": "Camila Santos",
+  "email": "camila.santos@empresa.com",
+  "password": "Camila@Ti2025",
+  "role": "ADMIN",
+  "department": "TI",
+  "phone": "(31) 98455-3399",
+  "image": null
+}
+{
+  "name": "Rafael Costa",
+  "email": "rafael.costa@inova.com",
+  "password": "Rafa#223344",
+  "role": "MEMBER",
+  "department": "Marketing",
+  "phone": "(41) 99123-4567",
+  "image": null
+}
+{
+  "name": "Patrícia Lima",
+  "email": "patricia.lima@corptech.com",
+  "password": "PatyLima@321",
+  "role": "MANAGER",
+  "department": "Financeiro",
+  "phone": "(71) 99665-4411",
+  "image": null
+}
+{
+  "name": "Gustavo Mendes",
+  "email": "gustavo.mendes@softdev.com",
+  "password": "GusMendes@123",
+  "role": "ADMIN",
+  "department": "Infraestrutura",
+  "phone": "(61) 98874-2200",
+  "image": null
+}
+{
+  "name": "Larissa Rocha",
+  "email": "larissa.rocha@empresa.com",
+  "password": "LariR0cha@2025",
+  "role": "MEMBER",
+  "department": "Suporte",
+  "phone": "(81) 99563-8471",
+  "image": null
+}
+{
+  "name": "Felipe Souza",
+  "email": "felipe.souza@innovation.com",
+  "password": "FeSouza!9988",
+  "role": "MANAGER",
+  "department": "Projetos",
+  "phone": "(51) 98745-2209",
+  "image": null
+}
+{
+  "name": "Aline Barros",
+  "email": "aline.barros@enterprise.com",
+  "password": "AlineB@445566",
+  "role": "ADMIN",
+  "department": "Controladoria",
+  "phone": "(85) 99231-5566",
+  "image": null
+}
+{
+  "name": "Tiago Almeida",
+  "email": "tiago.almeida@datahub.com",
+  "password": "Tiago@Dev2025",
+  "role": "MEMBER",
+  "department": "Banco de Dados",
+  "phone": "(91) 98945-1122",
+  "image": null
+}
