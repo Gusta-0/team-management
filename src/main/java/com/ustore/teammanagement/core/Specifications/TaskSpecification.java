@@ -1,8 +1,8 @@
 package com.ustore.teammanagement.core.Specifications;
 
 import com.ustore.teammanagement.core.entity.Task;
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 

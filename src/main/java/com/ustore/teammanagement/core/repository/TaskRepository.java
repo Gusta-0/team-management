@@ -1,14 +1,12 @@
 package com.ustore.teammanagement.core.repository;
 
 import com.ustore.teammanagement.core.entity.Task;
-import com.ustore.teammanagement.enums.TaskStatus;
-
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 
 import java.time.LocalDate;
 import java.util.List;

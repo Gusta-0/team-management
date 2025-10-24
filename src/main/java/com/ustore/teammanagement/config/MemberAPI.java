@@ -1,7 +1,7 @@
 package com.ustore.teammanagement.config;
 
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;

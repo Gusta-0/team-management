@@ -5,11 +5,10 @@ import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.PasswordResetToken;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.PasswordResetTokenRepository;
-import com.ustore.teammanagement.exception.ResourceNotFoundException;
-import com.ustore.teammanagement.exception.UnauthorizedException;
+import com.ustore.teammanagement.exceptions.ResourceNotFoundException;
+import com.ustore.teammanagement.exceptions.UnauthorizedException;
 import com.ustore.teammanagement.payload.dto.request.LoginRequest;
 import com.ustore.teammanagement.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +24,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class PasswordResetService {
 
     private final MemberService memberService;
@@ -36,6 +34,19 @@ public class PasswordResetService {
     private final MemberRepository memberRepository;
     private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
 
+    public PasswordResetService(MemberService memberService,
+                                PasswordResetTokenRepository tokenRepository,
+                                PasswordEncoder passwordEncoder,
+                                JwtUtil jwtUtil,
+                                AuthenticationManager authenticationManager,
+                                MemberRepository memberRepository) {
+        this.memberService = memberService;
+        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+        this.memberRepository = memberRepository;
+    }
 
     public String authenticationLogin(LoginRequest dto) {
         Member user = memberRepository.findByEmail(dto.email())

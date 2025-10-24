@@ -1,8 +1,8 @@
 package com.ustore.teammanagement.core.Specifications;
 
 import com.ustore.teammanagement.core.entity.Member;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import org.springframework.data.jpa.domain.Specification;
 
 public class MemberSpecification {

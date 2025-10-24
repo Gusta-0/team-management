@@ -1,8 +1,8 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.entity.Task;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.TaskRepository;
-import com.ustore.teammanagement.enums.TaskStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

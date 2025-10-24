@@ -1,7 +1,7 @@
 package com.ustore.teammanagement.payload.dto.request;
 
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
