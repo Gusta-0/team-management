@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: teste
+    active: prod
 
 ---
 spring:

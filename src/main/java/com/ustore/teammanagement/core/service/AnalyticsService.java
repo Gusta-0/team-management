@@ -1,13 +1,12 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.entity.Task;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.response.AnalyticsResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,10 +16,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AnalyticsService {
     private final TaskRepository taskRepository;
     private final MemberRepository memberRepository;
+
+    public AnalyticsService(TaskRepository taskRepository, MemberRepository memberRepository) {
+        this.taskRepository = taskRepository;
+        this.memberRepository = memberRepository;
+    }
 
     public AnalyticsResponse getAnalytics() {
         List<Task> allTasks = taskRepository.findAll();

@@ -2,17 +2,16 @@ package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.Specifications.TaskSpecification;
 import com.ustore.teammanagement.core.entity.Member;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.Role;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.Role;
-import com.ustore.teammanagement.enums.TaskStatus;
-import com.ustore.teammanagement.exception.ResourceNotFoundException;
+import com.ustore.teammanagement.exceptions.ResourceNotFoundException;
 import com.ustore.teammanagement.payload.dto.request.TaskRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.TaskResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,10 +23,14 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
     private final MemberRepository memberRepository;
+
+    public TaskService(TaskRepository taskRepository, MemberRepository memberRepository) {
+        this.taskRepository = taskRepository;
+        this.memberRepository = memberRepository;
+    }
 
     public TaskResponse createTask(TaskRequest request) throws AccessDeniedException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

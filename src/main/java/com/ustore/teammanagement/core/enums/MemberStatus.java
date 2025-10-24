@@ -1,4 +1,4 @@
-package com.ustore.teammanagement.enums;
+package com.ustore.teammanagement.core.enums;
 
 public enum MemberStatus {
     ACTIVE,

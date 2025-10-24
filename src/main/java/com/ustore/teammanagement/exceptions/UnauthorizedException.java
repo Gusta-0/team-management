@@ -1,4 +1,4 @@
-package com.ustore.teammanagement.exception;
+package com.ustore.teammanagement.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

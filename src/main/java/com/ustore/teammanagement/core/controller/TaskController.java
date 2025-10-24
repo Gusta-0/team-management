@@ -2,14 +2,13 @@ package com.ustore.teammanagement.core.controller;
 
 
 import com.ustore.teammanagement.config.TaskAPI;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.service.TaskService;
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.request.TaskRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.TaskResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +23,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/tasks")
-@RequiredArgsConstructor
 public class TaskController implements TaskAPI {
     private final TaskService taskService;
 
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @PostMapping
     @Override

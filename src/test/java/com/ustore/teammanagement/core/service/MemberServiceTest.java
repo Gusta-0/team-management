@@ -1,10 +1,10 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.entity.Member;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.core.repository.MemberRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
-import com.ustore.teammanagement.exception.ConflictException;
+import com.ustore.teammanagement.exceptions.ConflictException;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
@@ -53,7 +53,7 @@ class MemberServiceTest {
                 .name("Carlos Silva")
                 .email("carlos.silva@empresa.com")
                 .password("AAAaaa334444443..")
-                .role(com.ustore.teammanagement.enums.Role.MEMBER)
+                .role(Role.MEMBER)
                 .department("TI")
                 .phone("(83) 015401183")
                 .build();
@@ -61,7 +61,7 @@ class MemberServiceTest {
         member2 = Member.builder()
                 .name("Maria Souza")
                 .email("maria.souza@empresa.com")
-                .role(com.ustore.teammanagement.enums.Role.ADMIN)
+                .role(Role.ADMIN)
                 .department("RH")
                 .phone("(83) 010203040")
                 .status(MemberStatus.ACTIVE)
