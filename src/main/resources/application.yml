@@ -6,12 +6,13 @@ spring:
 spring:
   config:
     activate:
-      on-profile: teste
+      on-profile: deploy
 
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://dpg-d3qj546r433s73e3pa9g-a:5432/teammanager_ygig
     driver-class-name: org.postgresql.Driver
-
+    username: admin
+    password: 0HinuiHikVoLI7nRYelamlcU4T19aVbP
 
   jpa:
     hibernate:
@@ -29,6 +30,7 @@ logging:
 
 
 ---
+
 spring:
   config:
     activate:
@@ -53,3 +55,28 @@ logging:
   level:
     root: INFO
     org.hibernate.SQL: DEBUG
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:h2:mem:db_team_management
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.H2Dialect
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
