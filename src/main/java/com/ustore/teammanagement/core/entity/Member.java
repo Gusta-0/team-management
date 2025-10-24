@@ -37,6 +37,7 @@ public class Member implements UserDetails {
     private String phone;
     private OffsetDateTime joinDate;
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private MemberStatus status = MemberStatus.ACTIVE;
     private String image;
 

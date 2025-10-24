@@ -1,6 +1,33 @@
 spring:
   profiles:
-    active: prod
+    active: teste
+
+---
+spring:
+  config:
+    activate:
+      on-profile: deploy
+
+  datasource:
+    url: jdbc:postgresql://dpg-d3qj546r433s73e3pa9g-a:5432/teammanager_ygig
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    password: 0HinuiHikVoLI7nRYelamlcU4T19aVbP
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+
 
 ---
 
@@ -11,16 +38,23 @@ spring:
 
   datasource:
     url: jdbc:postgresql://db:5432/mydatabase
-    driver-class-name: org.postgresql.Driver
     username: manager
     password: manager123
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-      format_sql: true
     show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
 
 ---
 
@@ -28,6 +62,7 @@ spring:
   config:
     activate:
       on-profile: dev
+
   datasource:
     url: jdbc:h2:mem:db_team_management
     driver-class-name: org.h2.Driver
@@ -38,16 +73,10 @@ spring:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+      hibernate.format_sql: true
+      dialect: org.hibernate.dialect.H2Dialect
 
 logging:
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

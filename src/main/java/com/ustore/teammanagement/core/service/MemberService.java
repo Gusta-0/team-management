@@ -1,7 +1,6 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.Specifications.MemberSpecification;
-import com.ustore.teammanagement.core.entity.MemberFilter;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.enums.MemberStatus;
 import com.ustore.teammanagement.enums.Role;
@@ -30,7 +29,7 @@ public class MemberService {
 
     public void emailExiste(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
-            throw new ConflictException("Email" + email + "já cadastrado!");
+            throw new ConflictException("Email " + email + " já cadastrado!");
         }
     }
 

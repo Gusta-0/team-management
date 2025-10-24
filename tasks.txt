@@ -1,0 +1,100 @@
+{
+  "title": "Implementar autenticação",
+  "description": "Desenvolver o sistema de login para usuários.",
+  "status": "TO_DO",
+  "priority": "HIGH",
+  "dueDate": "2025-12-13",
+  "project": "Portal RH",
+  "tags": ["backend", "segurança"],
+  "assigneeId": "f68a6889-ee66-45b2-af31-5dadcba8f72b"
+}
+{
+  "title": "Criar dashboard administrativo",
+  "description": "Desenvolver tela de controle de acessos e relatórios para administradores.",
+  "status": "IN_PROGRESSO",
+  "priority": "URGENT",
+  "dueDate": "2025-12-25",
+  "project": "Performance Jurídica",
+  "tags": ["frontend", "analytics"],
+  "assigneeId": "529122e2-a09c-40e5-9c6b-11b08e5c95f8"
+}
+{
+  "title": "Integração com API do IBGE",
+  "description": "Consumir dados de municípios e estados via Playwright e armazenar no banco.",
+  "status": "REVISION",
+  "priority": "HIGH",
+  "dueDate": "2025-12-18",
+  "project": "Dados Nacionais",
+  "tags": ["rpa", "automação", "python"],
+  "assigneeId": "db073f42-84f0-4f15-8934-749df9d22552"
+}
+{
+  "title": "Refatorar serviço de notificações",
+  "description": "Melhorar a arquitetura do módulo de notificações e corrigir falhas de envio de e-mail.",
+  "status": "IN_PROGRESSO",
+  "priority": "MEDIUM",
+  "dueDate": "2025-12-27",
+  "project": "Portal RH",
+  "tags": ["backend", "refatoração"],
+  "assigneeId": "66b2d8a1-15a5-40e8-ac08-8d04339eee15"
+}
+{
+  "title": "Documentar endpoints da API",
+  "description": "Criar documentação Swagger e revisar exemplos de requisições.",
+  "status": "TO_DO",
+  "priority": "LOW",
+  "dueDate": "2025-11-05",
+  "project": "Team Manager",
+  "tags": ["documentação", "api"],
+  "assigneeId": "be4042a4-8f13-4f8a-9f48-7f091d82dfb1"
+}
+{
+  "title": "Desenvolver módulo de relatórios financeiros",
+  "description": "Gerar relatórios mensais e permitir exportação para Excel.",
+  "status": "COMPLETED",
+  "priority": "HIGH",
+  "dueDate": "2026-02-30",
+  "project": "Finance Control",
+  "tags": ["excel", "relatórios"],
+  "assigneeId": "cc9e2b33-b9f0-4359-8b45-504be2ea298c"
+}
+{
+  "title": "Implementar autenticação por token JWT",
+  "description": "Substituir autenticação por sessão por JWT e adicionar expiração de token.",
+  "status": "REVISION",
+  "priority": "URGENT",
+  "dueDate": "2025-11-20",
+  "project": "Team Manager",
+  "tags": ["segurança", "jwt", "backend"],
+  "assigneeId": "5d3be5da-0d5f-42ce-b062-bebb995471e9"
+}
+{
+  "title": "Criar script de backup automático",
+  "description": "Agendar backups diários do banco PostgreSQL via cron job.",
+  "status": "TO_DO",
+  "priority": "HIGH",
+  "dueDate": "2025-12-30",
+  "project": "Infraestrutura",
+  "tags": ["backup", "postgresql", "automação"],
+  "assigneeId": "db073f42-84f0-4f15-8934-749df9d22552"
+}
+{
+  "title": "Melhorar performance de consultas SQL",
+  "description": "Analisar queries lentas e aplicar índices para otimização.",
+  "status": "LATE",
+  "priority": "URGENT",
+  "dueDate": "2025-12-10",
+  "project": "Performance Jurídica",
+  "tags": ["banco de dados", "otimização"],
+  "assigneeId": "f68a6889-ee66-45b2-af31-5dadcba8f72b"
+}
+{
+  "title": "Implementar upload de imagens no perfil",
+  "description": "Permitir que os usuários adicionem e atualizem suas fotos de perfil.",
+  "status": "IN_PROGRESSO",
+  "priority": "MEDIUM",
+  "dueDate": "2026-11-02",
+  "project": "Portal RH",
+  "tags": ["frontend", "upload", "api"],
+  "assigneeId": "529122e2-a09c-40e5-9c6b-11b08e5c95f8"
+}

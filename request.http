@@ -5,11 +5,21 @@ Content-Type: application/json
 {
   "name": "Carlos Silva",
   "email": "carlos.silva@empresa.com",
-  "password": "HSYEjeufhrurh2343@@",
+  "password": "AAAaaa334444443..",
   "role": "ADMIN",
   "department": "TI",
   "phone": "(83) 015401183",
   "image": null
+},
+
+{
+  "name": "Gustavo Alves",
+  "email": "gustavo@gamil.com",
+  "password": "JP8nlPtWKNC@",
+  "role": "MEMBER",
+  "department": "Testes",
+  "phone":  "(81) 4356-4566",
+  "image": ""
 }
 
 ### Login de usuário (gera token JWT)
