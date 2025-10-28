@@ -3,7 +3,7 @@ package com.ustore.teammanagement.core.service;
 import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.PasswordRecoveryToken;
 import com.ustore.teammanagement.core.repository.MemberRepository;
-import com.ustore.teammanagement.core.repository.PasswordRecoveryTokenRepository;
+import com.ustore.teammanagement.core.repository.PasswordRecovery;
 import com.ustore.teammanagement.payload.dto.request.ForgotPasswordRequest;
 import com.ustore.teammanagement.payload.dto.request.ResetPasswordRequest;
 import com.ustore.teammanagement.payload.dto.response.RecoveryTokenResponse;
@@ -17,11 +17,11 @@ import java.util.UUID;
 @Service
 public class PasswordRecoveryService {
     private final MemberRepository memberRepository;
-    private final PasswordRecoveryTokenRepository tokenRepository;
+    private final PasswordRecovery tokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     public PasswordRecoveryService(MemberRepository memberRepository,
-                                   PasswordRecoveryTokenRepository tokenRepository,
+                                   PasswordRecovery tokenRepository,
                                    PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.tokenRepository = tokenRepository;
