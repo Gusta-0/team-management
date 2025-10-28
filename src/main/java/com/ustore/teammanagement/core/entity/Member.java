@@ -5,6 +5,7 @@ import com.ustore.teammanagement.core.enums.MemberStatus;
 import com.ustore.teammanagement.core.enums.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -110,7 +111,7 @@ public class Member implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_" + this.getUsername() + "_" + this.role.name());
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -122,7 +123,7 @@ public class Member implements UserDetails {
     public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() { return !accountLocked; }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
     public boolean isCredentialsNonExpired() { return true; }
@@ -142,18 +143,6 @@ public class Member implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, email);
-    }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                ", department='" + department + '\'' +
-                ", status=" + status +
-                '}';
     }
 
     public static class Builder {
@@ -178,12 +167,9 @@ public class Member implements UserDetails {
         public Builder role(Role role) { this.role = role; return this; }
         public Builder department(String department) { this.department = department; return this; }
         public Builder phone(String phone) { this.phone = phone; return this; }
-        public Builder joinDate(OffsetDateTime joinDate) { this.joinDate = joinDate; return this; }
         public Builder status(MemberStatus status) { this.status = status; return this; }
         public Builder image(String image) { this.image = image; return this; }
-        public Builder failedAttempts(Integer failedAttempts) { this.failedAttempts = failedAttempts; return this; }
-        public Builder accountLocked(Boolean accountLocked) { this.accountLocked = accountLocked; return this; }
-        public Builder lockTime(LocalDateTime lockTime) { this.lockTime = lockTime; return this; }
+
 
         public Member build() {
             return new Member(id, name, email, password, role, department, phone, joinDate, status, image, failedAttempts, accountLocked, lockTime);

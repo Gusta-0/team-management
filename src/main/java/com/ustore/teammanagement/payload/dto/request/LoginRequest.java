@@ -1,6 +1,5 @@
 package com.ustore.teammanagement.payload.dto.request;
 
-import com.ustore.teammanagement.core.entity.PasswordResetToken;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,7 +11,4 @@ public record LoginRequest(
         @NotBlank(message = "Senha é obrigatória")
         String password
 ) {
-    public LoginRequest (PasswordResetToken token) {
-        this(token.getMember().getEmail(), null);
-    }
 }
