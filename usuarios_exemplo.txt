@@ -1,7 +1,7 @@
 {
   "name": "Mariana Andrade",
   "email": "mariana.andrade@corp.com",
-  "password": "Mariana@12345",
+  "password": "KKKKjjjjj444@@",
   "role": "MANAGER",
   "department": "Recursos Humanos",
   "phone": "(11) 99854-1123",
