@@ -49,19 +49,18 @@ spring:
     properties:
       hibernate:
         format_sql: ${APP_FORMAT_SQL:true}
-      dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    user: ${DB_USER}
-    password: ${DB_PASSWORD}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
     default-schema: public
 
 logging:
   level:
     root: INFO
-    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 token:
   security:
