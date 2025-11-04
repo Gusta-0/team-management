@@ -60,11 +60,4 @@ public class TokenService implements AuthTokenService {
 
         return this.generateToken(member);
     }
-
-    public String generateRefreshToken(Member member){
-        return JWT.create().withIssuer("Team Management App")
-                .withSubject(member.getEmail()).withExpiresAt(dateExpiration(24*7))
-                .withClaim("type", "refresh")
-                .sign(Algorithm.HMAC256(securityJwt));
-    }
 }

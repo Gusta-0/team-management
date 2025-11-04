@@ -105,8 +105,15 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
 
 ---
-
 server:
   port: ${PORT:8080}
+
+---
+jwt:
+  public:
+    key: classpath:public.pem
+  private:
+    key: classpath:private.pem
+
 
 
