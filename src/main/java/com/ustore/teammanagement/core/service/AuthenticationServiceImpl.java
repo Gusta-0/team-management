@@ -30,7 +30,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return tokenService.generateToken((Member) auth.getPrincipal());
     }
 
-    public String refreshAccessToken(String refreshToken) {
-        return tokenService.refreshAccessToken(refreshToken);
+    public String generateRefreshToken(LoginRequest request) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
+        );
+        return tokenService.generateRefreshToken((Member) auth.getPrincipal());
     }
 }
