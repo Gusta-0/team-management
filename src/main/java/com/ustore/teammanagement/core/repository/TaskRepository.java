@@ -15,7 +15,6 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificationExecutor<Task> {
     long countByStatusNot(TaskStatus status);
     long countByStatusIn(List<TaskStatus> statuses);
-    List<Task> findTop5ByOrderByUpdatedAtDesc();
 
     @Query("""
         SELECT t FROM Task t
@@ -37,8 +36,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
     ORDER BY date
 """, nativeQuery = true)
     List<Object[]> findTaskTrend(@Param("days") int days);
-
-
 
 
     @Query(value = """
