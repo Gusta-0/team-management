@@ -36,14 +36,31 @@ public class MemberService {
         }
     }
 
-    public MemberResponse saveMember(MemberRequest memberRequest) {
+    @Transactional
+    public MemberResponse saveMember(MemberRequest memberRequest) throws AccessDeniedException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new AccessDeniedException("Acesso negado: usuário não autenticado.");
+        }
+
+        String emailLogado = auth.getName();
+        var memberLogado = memberRepository.findByEmail(emailLogado)
+                .orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
+
+        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))) {
+            throw new AccessDeniedException("Acesso negado: apenas ADMIN ou MANAGER podem criar usuários.");
+        }
+
         emailExiste(memberRequest.email());
+
         var member = memberRequest.toMember();
         member.setStatus(MemberStatus.ACTIVE);
         member.setPassword(passwordEncoder.encode(memberRequest.password()));
+
         var savedMember = memberRepository.save(member);
         return new MemberResponse(savedMember);
     }
+
 
     public Page<MemberResponse> search(String name, String email, Pageable pageable) {
         return memberRepository.findAll(
