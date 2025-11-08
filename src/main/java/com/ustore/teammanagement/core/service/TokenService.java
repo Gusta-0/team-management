@@ -27,7 +27,7 @@ public class TokenService implements AuthTokenService {
     }
 
     public String generateToken(Member member){
-        return JWT.create().withIssuer("Team Management App")
+        return JWT.create().withIssuer(member.getName())
                 .withSubject(member.getEmail()).withExpiresAt(dateExpiration(1))
                 .withClaim("type", "access")
                 .sign(Algorithm.HMAC256(securityJwt));
