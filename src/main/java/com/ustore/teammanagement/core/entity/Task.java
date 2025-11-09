@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tasks")
 public class Task {
 
     @Id
