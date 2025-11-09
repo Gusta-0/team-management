@@ -37,19 +37,19 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse saveMember(MemberRequest memberRequest) throws AccessDeniedException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            throw new AccessDeniedException("Acesso negado: usuário não autenticado.");
-        }
-
-        String emailLogado = auth.getName();
-        var memberLogado = memberRepository.findByEmail(emailLogado)
-                .orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
-
-        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))) {
-            throw new AccessDeniedException("Acesso negado: apenas ADMIN ou MANAGER podem criar usuários.");
-        }
+    public MemberResponse saveMember(MemberRequest memberRequest) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth == null || !auth.isAuthenticated()) {
+//            throw new AccessDeniedException("Acesso negado: usuário não autenticado.");
+//        }
+//
+//        String emailLogado = auth.getName();
+//        var memberLogado = memberRepository.findByEmail(emailLogado)
+//                .orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
+//
+//        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))) {
+//            throw new AccessDeniedException("Acesso negado: apenas ADMIN ou MANAGER podem criar usuários.");
+//        }
 
         emailExiste(memberRequest.email());
 

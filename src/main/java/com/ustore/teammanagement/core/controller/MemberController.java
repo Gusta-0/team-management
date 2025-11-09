@@ -31,7 +31,7 @@ public class MemberController implements MemberAPI {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<MemberResponse> saveMember(@Valid @RequestBody MemberRequest memberRequest) {
         MemberResponse response = memberService.saveMember(memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
