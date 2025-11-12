@@ -2,6 +2,7 @@ package com.ustore.teammanagement.config;
 
 
 import com.ustore.teammanagement.payload.dto.request.*;
+import com.ustore.teammanagement.payload.dto.response.LoginResponse;
 import com.ustore.teammanagement.payload.dto.response.RecoveryTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,19 +21,27 @@ import java.util.Map;
 public interface AuthAPI {
     @Operation(
             summary = "Autenticar usuário",
-            description = "Realiza a autenticação do usuário e retorna um token JWT válido.",
+            description = "Valida as credenciais informadas e retorna um par de tokens JWT (access e refresh), além de metadados da sessão.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Autenticação realizada com sucesso",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = TokenForm.class))
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginResponse.class)
+                            )
                     ),
-                    @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-                    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Requisição inválida (campos ausentes ou mal formatados)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Credenciais inválidas"
+                    )
             }
     )
-    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequest request);
+    ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request);
 
 
     @Operation(summary = "Solicita recuperação de senha",

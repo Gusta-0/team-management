@@ -51,7 +51,9 @@ public class TokenService implements AuthTokenService {
 
     @Override
     public String refreshAccessToken(String token) {
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(securityJwt)).withClaim("type", "refresh").build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(securityJwt))
+                .withIssuer("Team Management App")
+                .withClaim("type", "refresh").build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);
         String userEmail = decodedJWT.getSubject();
 
@@ -63,8 +65,15 @@ public class TokenService implements AuthTokenService {
 
     public String generateRefreshToken(Member member){
         return JWT.create().withIssuer("Team Management App")
-                .withSubject(member.getEmail()).withExpiresAt(dateExpiration(24*7))
+                .withSubject(member.getEmail())
+                .withExpiresAt(expirationHours(24 * 7))
                 .withClaim("type", "refresh")
                 .sign(Algorithm.HMAC256(securityJwt));
+    }
+
+    private Instant expirationHours(long hours) {
+        return LocalDateTime.now()
+                .plusHours(hours)
+                .toInstant(ZoneOffset.of("-03:00"));
     }
 }

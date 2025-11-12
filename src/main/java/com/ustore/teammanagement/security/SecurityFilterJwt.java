@@ -43,10 +43,11 @@ public class SecurityFilterJwt extends OncePerRequestFilter {
             return;
         }
 
-        if (path.startsWith("/member") && request.getMethod().equals("POST") ||
-                path.startsWith("/auth/login") ||
-                path.startsWith("/auth/refresh-token")) {
-
+        if (
+                (path.equals("/member") && request.getMethod().equals("POST")) ||
+                        path.equals("/auth/login") ||
+                        path.equals("/auth/refresh-token")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -72,6 +73,8 @@ public class SecurityFilterJwt extends OncePerRequestFilter {
 
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
 
