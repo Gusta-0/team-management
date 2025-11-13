@@ -32,6 +32,8 @@ public class Task {
     private String project;
 
     @ElementCollection
+    @CollectionTable(name = "task_tags", joinColumns = @JoinColumn(name = "task_id"))
+    @Column(name = "tag", nullable = false)
     private List<String> tags;
 
     private OffsetDateTime createdAt;
