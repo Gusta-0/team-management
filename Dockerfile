@@ -10,7 +10,7 @@ RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon || return 0
 COPY src ./src
 
-RUN ./gradlew clean bootJar -x test --no-daemon
+RUN ./gradlew clean bootJar --no-daemon
 
 FROM eclipse-temurin:17-jdk
 WORKDIR /app

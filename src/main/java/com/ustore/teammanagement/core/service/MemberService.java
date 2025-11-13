@@ -1,16 +1,15 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.Specifications.MemberSpecification;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.core.repository.MemberRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
-import com.ustore.teammanagement.exception.ConflictException;
-import com.ustore.teammanagement.exception.ResourceNotFoundException;
+import com.ustore.teammanagement.exceptions.ConflictException;
+import com.ustore.teammanagement.exceptions.ResourceNotFoundException;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,10 +21,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void emailExiste(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
@@ -33,14 +36,31 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public MemberResponse saveMember(MemberRequest memberRequest) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth == null || !auth.isAuthenticated()) {
+//            throw new AccessDeniedException("Acesso negado: usuário não autenticado.");
+//        }
+//
+//        String emailLogado = auth.getName();
+//        var memberLogado = memberRepository.findByEmail(emailLogado)
+//                .orElseThrow(() -> new ResourceNotFoundException("Membro logado não encontrado"));
+//
+//        if (!(memberLogado.getRole().equals(Role.ADMIN) || memberLogado.getRole().equals(Role.MANAGER))) {
+//            throw new AccessDeniedException("Acesso negado: apenas ADMIN ou MANAGER podem criar usuários.");
+//        }
+
         emailExiste(memberRequest.email());
+
         var member = memberRequest.toMember();
         member.setStatus(MemberStatus.ACTIVE);
         member.setPassword(passwordEncoder.encode(memberRequest.password()));
+
         var savedMember = memberRepository.save(member);
         return new MemberResponse(savedMember);
     }
+
 
     public Page<MemberResponse> search(String name, String email, Pageable pageable) {
         return memberRepository.findAll(

@@ -1,26 +1,28 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.entity.Task;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.response.ActivityResponse;
 import com.ustore.teammanagement.payload.dto.response.DashboardResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class DashboardService {
 
     private final MemberRepository memberRepository;
     private final TaskRepository taskRepository;
+
+    public DashboardService(MemberRepository memberRepository, TaskRepository taskRepository) {
+        this.memberRepository = memberRepository;
+        this.taskRepository = taskRepository;
+    }
 
     public DashboardResponse getDashboardStats() {
         long totalMembers = memberRepository.countByStatus(MemberStatus.ACTIVE);

@@ -1,8 +1,8 @@
 package com.ustore.teammanagement.payload.dto.response;
 
 import com.ustore.teammanagement.core.entity.Task;
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;

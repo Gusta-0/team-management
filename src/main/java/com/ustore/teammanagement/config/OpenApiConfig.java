@@ -31,7 +31,6 @@ public class OpenApiConfig implements OpenApiConstants {
                 .in(In.HEADER);
     }
 
-
     private Info criarApiInfo() {
         return new Info()
                 .title(TITULO_API)

@@ -1,14 +1,12 @@
 package com.ustore.teammanagement.core.repository;
 
 import com.ustore.teammanagement.core.entity.Task;
-import com.ustore.teammanagement.enums.TaskStatus;
-
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificationExecutor<Task> {
     long countByStatusNot(TaskStatus status);
     long countByStatusIn(List<TaskStatus> statuses);
-    List<Task> findTop5ByOrderByUpdatedAtDesc();
 
     @Query("""
         SELECT t FROM Task t
@@ -39,8 +36,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
     ORDER BY date
 """, nativeQuery = true)
     List<Object[]> findTaskTrend(@Param("days") int days);
-
-
 
 
     @Query(value = """

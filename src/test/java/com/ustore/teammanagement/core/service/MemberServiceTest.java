@@ -1,16 +1,17 @@
 package com.ustore.teammanagement.core.service;
 
 import com.ustore.teammanagement.core.entity.Member;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.core.repository.MemberRepository;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
-import com.ustore.teammanagement.exception.ConflictException;
+import com.ustore.teammanagement.exceptions.ConflictException;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,7 +56,7 @@ class MemberServiceTest {
                 .name("Carlos Silva")
                 .email("carlos.silva@empresa.com")
                 .password("AAAaaa334444443..")
-                .role(com.ustore.teammanagement.enums.Role.MEMBER)
+                .role(Role.MEMBER)
                 .department("TI")
                 .phone("(83) 015401183")
                 .build();
@@ -61,7 +64,7 @@ class MemberServiceTest {
         member2 = Member.builder()
                 .name("Maria Souza")
                 .email("maria.souza@empresa.com")
-                .role(com.ustore.teammanagement.enums.Role.ADMIN)
+                .role(Role.ADMIN)
                 .department("RH")
                 .phone("(83) 010203040")
                 .status(MemberStatus.ACTIVE)
@@ -85,14 +88,14 @@ class MemberServiceTest {
 
         ConflictException exception = assertThrows(
                 ConflictException.class,
-                () -> memberService.saveMember(memberRequest)
+                () -> memberService.emailExiste(memberRequest.email())
         );
 
         assertEquals("Email " + memberRequest.email() + " já cadastrado!", exception.getMessage());
 
+        verify(memberRepository, times(1)).findByEmail(memberRequest.email());
         verify(memberRepository, never()).save(any(Member.class));
     }
-
 
     @Test
     void shouldNotThrowExceptionWhenEmailDoesNotExist() {
@@ -103,15 +106,26 @@ class MemberServiceTest {
     }
 
     @Test
-    void shouldSaveMemberSuccessfully() {
-        when(memberRepository.findByEmail(memberRequest.email()))
-                .thenReturn(Optional.empty());
+    void shouldSaveMemberSuccessfullyWhenAdmin() throws Exception {
+        Member loggedAdmin = Member.builder()
+                .id(UUID.randomUUID())
+                .name("Administrador")
+                .email("admin@teste.com")
+                .role(Role.ADMIN)
+                .build();
 
-        when(passwordEncoder.encode(memberRequest.password()))
-                .thenReturn("encoded123");
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn(loggedAdmin.getEmail());
+        when(auth.isAuthenticated()).thenReturn(true);
 
-        when(memberRepository.save(any(Member.class)))
-                .thenReturn(member1);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(memberRepository.findByEmail("admin@teste.com")).thenReturn(Optional.of(loggedAdmin));
+        when(memberRepository.findByEmail(memberRequest.email())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(memberRequest.password())).thenReturn("encoded123");
+        when(memberRepository.save(any(Member.class))).thenReturn(member1);
 
         MemberResponse response = memberService.saveMember(memberRequest);
 
@@ -120,9 +134,49 @@ class MemberServiceTest {
         assertEquals("carlos.silva@empresa.com", response.email());
         assertEquals(MemberStatus.ACTIVE, response.status());
 
+        ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
         verify(memberRepository, times(1)).findByEmail(memberRequest.email());
         verify(passwordEncoder, times(1)).encode(memberRequest.password());
-        verify(memberRepository, times(1)).save(any(Member.class));
+        verify(memberRepository, times(1)).save(captor.capture());
+
+        Member savedMember = captor.getValue();
+        assertEquals("Carlos Silva", savedMember.getName());
+        assertEquals("carlos.silva@empresa.com", savedMember.getEmail());
+        assertEquals("encoded123", savedMember.getPassword());
+        assertEquals(MemberStatus.ACTIVE, savedMember.getStatus());
+        assertNull(savedMember.getId());
+
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMemberTriesToSaveUser() {
+        Member loggedMember = Member.builder()
+                .id(UUID.randomUUID())
+                .name("Membro")
+                .email("member@teste.com")
+                .role(Role.MEMBER)
+                .build();
+
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn(loggedMember.getEmail());
+        when(auth.isAuthenticated()).thenReturn(true);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(memberRepository.findByEmail("member@teste.com")).thenReturn(Optional.of(loggedMember));
+
+        AccessDeniedException exception = assertThrows(
+                AccessDeniedException.class,
+                () -> memberService.saveMember(memberRequest)
+        );
+
+        assertEquals("Acesso negado: apenas ADMIN ou MANAGER podem criar usuários.", exception.getMessage());
+
+        verify(memberRepository, never()).save(any(Member.class));
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -169,10 +223,10 @@ class MemberServiceTest {
     }
 
     @Test
-    void shouldUpdateMemberSuccessfullyAsAdmin() throws Exception {
+    void shouldUpdateMemberSuccessfullyAsAdmin() {
         UUID targetId = UUID.randomUUID();
 
-        Member memberLogado = Member.builder()
+        Member admin = Member.builder()
                 .id(UUID.randomUUID())
                 .name("Admin")
                 .email("admin@teste.com")
@@ -189,23 +243,153 @@ class MemberServiceTest {
         MemberUpdateRequest updateRequest = mock(MemberUpdateRequest.class);
 
         Authentication auth = mock(Authentication.class);
-        when(auth.getName()).thenReturn("admin@teste.com");
+        when(auth.getName()).thenReturn(admin.getEmail());
 
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        when(memberRepository.findByEmail("admin@teste.com")).thenReturn(Optional.of(memberLogado));
-        when(memberRepository.findById(targetId)).thenReturn(Optional.of(targetMember));
-        when(memberRepository.save(targetMember)).thenReturn(targetMember);
+        when(memberRepository.findByEmail(admin.getEmail()))
+                .thenReturn(Optional.of(admin));
 
-        doNothing().when(updateRequest).updateMember(targetMember, updateRequest);
+        when(memberRepository.findById(targetId))
+                .thenReturn(Optional.of(targetMember));
+
+        when(memberRepository.save(any(Member.class)))
+                .thenReturn(targetMember);
+
+        doNothing().when(updateRequest).updateMember(any(Member.class), eq(updateRequest));
 
         MemberResponse response = memberService.update(targetId, updateRequest);
 
         assertNotNull(response);
         assertEquals("Carlos", response.name());
+        assertEquals("carlos@teste.com", response.email());
+
+        ArgumentCaptor<Member> captor = ArgumentCaptor.forClass(Member.class);
+        verify(memberRepository).save(captor.capture());
+        Member savedMember = captor.getValue();
+
+        assertEquals(targetId, savedMember.getId());
+        assertEquals("Carlos", savedMember.getName());
+        assertEquals("carlos@teste.com", savedMember.getEmail());
+
         verify(updateRequest, times(1)).updateMember(targetMember, updateRequest);
-        verify(memberRepository, times(1)).save(targetMember);
+        verify(memberRepository, times(1)).findByEmail(admin.getEmail());
+        verify(memberRepository, times(1)).findById(targetId);
+        verify(memberRepository, times(1)).save(any(Member.class));
+    }
+
+    @Test
+    void shouldThrowAccessDeniedWhenMemberTriesToUpdateAdmin() {
+        UUID targetId = UUID.randomUUID();
+
+        Member memberLogado = Member.builder()
+                .id(UUID.randomUUID())
+                .name("Usuário Comum")
+                .email("user@teste.com")
+                .role(Role.MEMBER)
+                .build();
+
+        Member targetMember = Member.builder()
+                .id(targetId)
+                .name("Administrador")
+                .email("admin@teste.com")
+                .role(Role.ADMIN)
+                .build();
+
+        MemberUpdateRequest updateRequest = mock(MemberUpdateRequest.class);
+
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn(memberLogado.getEmail());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(memberRepository.findByEmail(memberLogado.getEmail()))
+                .thenReturn(Optional.of(memberLogado));
+
+        when(memberRepository.findById(targetId))
+                .thenReturn(Optional.of(targetMember));
+
+        AccessDeniedException exception = assertThrows(
+                AccessDeniedException.class,
+                () -> memberService.update(targetId, updateRequest)
+        );
+
+        assertEquals("Acesso negado: você não tem permissão para atualizar este membro.", exception.getMessage());
+
+        verify(memberRepository, never()).save(any(Member.class));
+        verify(updateRequest, never()).updateMember(any(Member.class), any(MemberUpdateRequest.class));
+    }
+
+    @Test
+    void shouldAllowAdminAndManagerToInactivateMember() {
+        UUID targetId = UUID.randomUUID();
+
+        Member admin = new Member();
+        admin.setEmail("admin@empresa.com");
+        admin.setRole(Role.ADMIN);
+
+        Member manager = new Member();
+        manager.setEmail("manager@empresa.com");
+        manager.setRole(Role.MANAGER);
+
+        Member target = new Member();
+        target.setId(targetId);
+        target.setStatus(MemberStatus.ACTIVE);
+
+        Authentication adminAuth = mock(Authentication.class);
+        when(adminAuth.getName()).thenReturn(admin.getEmail());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(adminAuth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(memberRepository.findByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
+        when(memberRepository.findById(targetId)).thenReturn(Optional.of(target));
+
+        assertDoesNotThrow(() -> memberService.inactivateMember(targetId));
+        assertEquals(MemberStatus.INACTIVE, target.getStatus());
+
+        Authentication managerAuth = mock(Authentication.class);
+        when(managerAuth.getName()).thenReturn(manager.getEmail());
+        when(securityContext.getAuthentication()).thenReturn(managerAuth);
+
+        when(memberRepository.findByEmail(manager.getEmail())).thenReturn(Optional.of(manager));
+        when(memberRepository.findById(targetId)).thenReturn(Optional.of(target));
+
+        target.setStatus(MemberStatus.ACTIVE);
+        assertDoesNotThrow(() -> memberService.inactivateMember(targetId));
+        assertEquals(MemberStatus.INACTIVE, target.getStatus());
+    }
+
+    @Test
+    void shouldThrowAccessDeniedExceptionWhenMemberTriesToInactivateAnotherUser() {
+        UUID targetId = UUID.randomUUID();
+
+        Member memberLogado = new Member();
+        memberLogado.setId(UUID.randomUUID());
+        memberLogado.setEmail("user@empresa.com");
+        memberLogado.setRole(Role.MEMBER);
+
+        Member target = new Member();
+        target.setId(targetId);
+        target.setStatus(MemberStatus.ACTIVE);
+
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn(memberLogado.getEmail());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(memberRepository.findByEmail(memberLogado.getEmail())).thenReturn(Optional.of(memberLogado));
+        when(memberRepository.findById(targetId)).thenReturn(Optional.of(target));
+
+        assertThrows(AccessDeniedException.class, () -> memberService.inactivateMember(targetId));
+
+        verify(memberRepository, never()).save(any(Member.class));
     }
 }

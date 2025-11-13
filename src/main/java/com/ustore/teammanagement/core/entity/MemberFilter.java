@@ -1,7 +1,7 @@
 package com.ustore.teammanagement.core.entity;
 
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 
 public record MemberFilter(
         String name,

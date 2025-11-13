@@ -1,4 +1,4 @@
-package com.ustore.teammanagement.exception;
+package com.ustore.teammanagement.exceptions;
 
 public class IllegalArgumentException extends RuntimeException {
     public IllegalArgumentException(String mensagem){

@@ -1,7 +1,7 @@
 package com.ustore.teammanagement.config;
 
-import com.ustore.teammanagement.enums.Priority;
-import com.ustore.teammanagement.enums.TaskStatus;
+import com.ustore.teammanagement.core.enums.Priority;
+import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.payload.dto.request.TaskRequest;
 import com.ustore.teammanagement.payload.dto.request.TaskUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.TaskResponse;

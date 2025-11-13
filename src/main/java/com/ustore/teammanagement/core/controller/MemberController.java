@@ -1,14 +1,13 @@
 package com.ustore.teammanagement.core.controller;
 
 import com.ustore.teammanagement.config.MemberAPI;
+import com.ustore.teammanagement.core.enums.MemberStatus;
+import com.ustore.teammanagement.core.enums.Role;
 import com.ustore.teammanagement.core.service.MemberService;
-import com.ustore.teammanagement.enums.MemberStatus;
-import com.ustore.teammanagement.enums.Role;
 import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,18 +18,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/member")
-@RequiredArgsConstructor
 @Validated
 public class MemberController implements MemberAPI {
     private final MemberService memberService;
 
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<MemberResponse> saveMember(@Valid @RequestBody MemberRequest memberRequest) {
         MemberResponse response = memberService.saveMember(memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

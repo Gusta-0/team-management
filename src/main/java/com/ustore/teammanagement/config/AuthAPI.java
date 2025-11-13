@@ -1,11 +1,10 @@
 package com.ustore.teammanagement.config;
 
 
-import com.ustore.teammanagement.payload.dto.request.LoginRequest;
-import com.ustore.teammanagement.payload.dto.request.PasswordRecoveryRequest;
-import com.ustore.teammanagement.payload.dto.request.ResetPasswordRequest;
+import com.ustore.teammanagement.payload.dto.request.*;
+import com.ustore.teammanagement.payload.dto.response.LoginResponse;
+import com.ustore.teammanagement.payload.dto.response.RecoveryTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,47 +12,60 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "Autenticação", description = "Endpoints para login e recuperação de senha")
-public interface AuthAPI {
+import java.util.Map;
 
+@Tag(name = "Autenticação", description = "Endpoints para autenticação e renovação de tokens JWT")
+public interface AuthAPI {
     @Operation(
-            summary = "Login do usuário",
-            description = "Autentica o usuário com email e senha e retorna um token JWT em formato de String"
+            summary = "Autenticar usuário",
+            description = "Valida as credenciais informadas e retorna um par de tokens JWT (access e refresh), além de metadados da sessão.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Autenticação realizada com sucesso",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Requisição inválida (campos ausentes ou mal formatados)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Credenciais inválidas"
+                    )
+            }
     )
+    ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request);
+
+
+    @Operation(summary = "Solicita recuperação de senha",
+            description = "Gera um token de recuperação para o email informado")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso",
-                    content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."))),
-            @ApiResponse(responseCode = "401", description = "Credenciais inválidas",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Token gerado com sucesso",
+                    content = @Content(schema = @Schema(implementation = RecoveryTokenResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Email inválido ou não encontrado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    ResponseEntity<String> login(
-            @Parameter(description = "Dados de login do usuário", required = true)
-            @Valid @RequestBody LoginRequest request
+    @PostMapping("/forgot-password")
+    ResponseEntity<RecoveryTokenResponse> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request
     );
 
-
-    @Operation(
-            summary = "Solicitar recuperação de senha",
-            description = "Gera um token de recuperação e simula o envio por e-mail."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Token gerado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @Operation(summary = "Redefine senha do usuário",
+            description = "Recebe o token de recuperação e a nova senha para redefinir a senha do usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Senha redefinida com sucesso", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Token inválido ou expirado / senha inválida", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
-    ResponseEntity<String> forgotPassword(@RequestBody PasswordRecoveryRequest request);
+    @PostMapping("/reset-password")
+    ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request
+    );
 
-    @Operation(
-            summary = "Redefinir senha",
-            description = "Permite redefinir a senha com base em um token válido e confirmação da nova senha."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Senha redefinida com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Token inválido ou senhas não coincidem"),
-            @ApiResponse(responseCode = "404", description = "Token não encontrado ou expirado")
-    })
-    ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request);
 }
 
