@@ -18,9 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
 import java.util.UUID;
@@ -40,6 +38,7 @@ public interface MemberAPI {
             @ApiResponse(responseCode = "409", description = "Email already registered",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @PostMapping
     ResponseEntity<MemberResponse> saveMember(
             @Valid @RequestBody MemberRequest memberRequest
     );
@@ -51,6 +50,7 @@ public interface MemberAPI {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of members found")
     })
+    @GetMapping("/search")
     Page<MemberResponse> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
@@ -86,6 +86,7 @@ public interface MemberAPI {
             @ApiResponse(responseCode = "404", description = "Member not found",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @PatchMapping("/{id}")
     ResponseEntity<MemberResponse> updateMember(
             @Parameter(description = "ID of the member to be updated", required = true)
             @PathVariable UUID id,
@@ -103,6 +104,7 @@ public interface MemberAPI {
             @ApiResponse(responseCode = "404", description = "Member not found",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @DeleteMapping("/{id}")
     void inactivate(
             @Parameter(description = "ID of the member to inactivate", required = true)
             @PathVariable UUID id

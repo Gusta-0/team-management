@@ -62,7 +62,6 @@ public class DashboardService {
                 .toList();
     }
 
-
     private String getActionLabel(Task task) {
         return switch (task.getStatus()) {
             case COMPLETED -> "concluiu a tarefa";

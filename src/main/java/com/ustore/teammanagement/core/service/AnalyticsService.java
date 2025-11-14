@@ -1,18 +1,25 @@
 package com.ustore.teammanagement.core.service;
 
+import com.ustore.teammanagement.core.Specifications.MemberSpecification;
+import com.ustore.teammanagement.core.Specifications.TaskSpecification;
+import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.core.enums.MemberStatus;
 import com.ustore.teammanagement.core.enums.Priority;
 import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
-import com.ustore.teammanagement.payload.dto.response.AnalyticsResponse;
+import com.ustore.teammanagement.payload.dto.response.AnalyticsTaskResponse;
+import com.ustore.teammanagement.payload.dto.response.OverviewResponse;
+import com.ustore.teammanagement.payload.dto.response.MemberPerformanceResponse;
+import com.ustore.teammanagement.payload.dto.response.ProjectProgressResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +32,7 @@ public class AnalyticsService {
         this.memberRepository = memberRepository;
     }
 
-    public AnalyticsResponse getAnalytics() {
+    public OverviewResponse AnalyticsOverview() {
         List<Task> allTasks = taskRepository.findAll();
         long activeMembers = memberRepository.countByStatus(MemberStatus.ACTIVE);
         long totalTasks = allTasks.size();
@@ -45,21 +52,28 @@ public class AnalyticsService {
         double completionRate = totalTasks == 0 ? 0 :
                 (double) completedOnTime / totalTasks * 100;
 
+        return new OverviewResponse(
+                activeTasks,
+                lateTasks,
+                Math.round(completionRate),
+                activeMembers
+        );
+    }
+
+    public AnalyticsTaskResponse getAnalyticsTasks(int days) {
+        List<Task> allTasks = taskRepository.findAll();
+
         Map<TaskStatus, Long> tasksByStatus = allTasks.stream()
                 .collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
 
         Map<Priority, Long> tasksByPriority = allTasks.stream()
                 .collect(Collectors.groupingBy(Task::getPriority, Collectors.counting()));
 
-        List<Map<String, Object>> completionTrend = getTrendData(30);
+        List<Map<String, Object>> completionTrend = getTrendData(days);
 
         List<Map<String, Object>> departmentPerformance = buildDepartmentPerformance();
 
-        return new AnalyticsResponse(
-                activeTasks,
-                lateTasks,
-                Math.round(completionRate),
-                activeMembers,
+        return new AnalyticsTaskResponse(
                 tasksByStatus,
                 tasksByPriority,
                 completionTrend,
@@ -81,7 +95,6 @@ public class AnalyticsService {
         return trend;
     }
 
-
     private List<Map<String, Object>> buildDepartmentPerformance() {
         List<Object[]> rows = taskRepository.findDepartmentPerformance();
 
@@ -94,6 +107,96 @@ public class AnalyticsService {
             result.add(map);
         }
         return result;
+    }
+
+    public Page<MemberPerformanceResponse> getPerformanceByDepartment(String department, String memberName, Pageable pageable
+    ) {
+        Specification<Member> spec = MemberSpecification.withAnalysisFilters(department, memberName);
+
+        return memberRepository.findAll(spec, pageable)
+                .map(member -> {
+                    long tasksAssigned = taskRepository.countByAssignee(member);
+                    long tasksCompleted = taskRepository.countByAssigneeAndStatus(member, TaskStatus.COMPLETED);
+
+                    double avgCompletionTime = 0;
+                    int trend = 0;
+
+                    return MemberPerformanceResponse.fromEntity(
+                            member,
+                            tasksCompleted,
+                            tasksAssigned,
+                            avgCompletionTime,
+                            trend
+                    );
+                });
+    }
+
+    public List<ProjectProgressResponse> getProjectProgress(String department, String name) {
+        List<Task> tasks = taskRepository.findAll(
+                TaskSpecification.withAnalysisFilters(department, name)
+        );
+
+        // Agrupar tarefas por nome do projeto
+        Map<String, List<Task>> grouped = tasks.stream()
+                .collect(Collectors.groupingBy(Task::getProject));
+
+        return grouped.entrySet().stream()
+                .map(entry -> {
+
+                    String projectName = entry.getKey();
+                    List<Task> projectTasks = entry.getValue();
+
+                    long totalTasks = projectTasks.size();
+                    long completedTasks = projectTasks.stream()
+                            .filter(t -> t.getStatus() == TaskStatus.COMPLETED)
+                            .count();
+
+                    double progress = totalTasks > 0
+                            ? (completedTasks * 100.0 / totalTasks)
+                            : 0.0;
+
+                    LocalDate dueDate = projectTasks.stream()
+                            .map(Task::getDueDate)
+                            .filter(Objects::nonNull)
+                            .min(LocalDate::compareTo)
+                            .orElse(null);
+
+                    long teamMembers = projectTasks.stream()
+                            .map(Task::getAssignee)
+                            .filter(Objects::nonNull)
+                            .map(Member::getId)
+                            .distinct()
+                            .count();
+
+                    Priority priority = projectTasks.stream()
+                            .map(Task::getPriority)
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(Priority.MEDIUM);
+
+                    TaskStatus status = calculateProjectStatus(dueDate);
+
+                    return new ProjectProgressResponse(
+                            UUID.randomUUID(),
+                            projectName,
+                            "Projeto " + projectName,
+                            progress,
+                            totalTasks,
+                            completedTasks,
+                            teamMembers,
+                            dueDate,
+                            status,
+                            priority
+                    );
+                })
+                .toList();
+    }
+
+    private TaskStatus calculateProjectStatus(LocalDate dueDate) {
+        if (dueDate == null) return TaskStatus.IN_PROGRESSO; // ou outro status
+        return dueDate.isBefore(LocalDate.now())
+                ? TaskStatus.LATE
+                : TaskStatus.IN_PROGRESSO;
     }
 
 }
