@@ -11,8 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Base64;
 
 @Service
 public class PasswordRecoveryService {
@@ -28,16 +29,28 @@ public class PasswordRecoveryService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private String generateSecureToken() {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[32]; // 256 bits
+        random.nextBytes(bytes);
+
+        return Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes);
+    }
+
     public RecoveryTokenResponse generateRecoveryToken(ForgotPasswordRequest request) {
         Member member = memberRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o e-mail informado."));
 
-        String token = UUID.randomUUID().toString(); // pode usar SecureRandom também
+        String token = generateSecureToken();
 
         PasswordRecoveryToken recoveryToken = new PasswordRecoveryToken();
         recoveryToken.setToken(token);
         recoveryToken.setMember(member);
-        recoveryToken.setExpiration(LocalDateTime.now().plusHours(1));
+        recoveryToken.setExpiration(LocalDateTime.now().plusMinutes(30)); // mais seguro
+        recoveryToken.setUsed(false);
+
         tokenRepository.save(recoveryToken);
 
         return new RecoveryTokenResponse(token);

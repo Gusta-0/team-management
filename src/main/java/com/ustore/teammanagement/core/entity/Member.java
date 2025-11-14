@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "members")
 public class Member implements UserDetails {
 
     @Id

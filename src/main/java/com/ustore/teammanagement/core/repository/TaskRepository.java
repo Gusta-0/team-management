@@ -1,5 +1,6 @@
 package com.ustore.teammanagement.core.repository;
 
+import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.core.enums.TaskStatus;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
         DATE_TRUNC('day', t.created_at) AS date,
         COUNT(*) FILTER (WHERE t.status IN ('TO_DO', 'IN_PROGRESS', 'REVISION', 'LATE')) AS created,
         COUNT(*) FILTER (WHERE t.status = 'COMPLETED') AS completed
-    FROM tasks t
+    FROM task t
     WHERE t.created_at >= NOW() - make_interval(days => :days)
     GROUP BY DATE_TRUNC('day', t.created_at)
     ORDER BY date
@@ -43,13 +44,17 @@ public interface TaskRepository extends JpaRepository<Task, UUID>, JpaSpecificat
         m.department AS department,
         COUNT(*) FILTER (WHERE t.status = 'COMPLETED') AS completed,
         COUNT(*) FILTER (WHERE t.status != 'COMPLETED' OR t.status IS NULL) AS pending
-    FROM members m
-    LEFT JOIN tasks t ON t.assignee_id = m.id
+    FROM member m
+    LEFT JOIN task t ON t.assignee_id = m.id
     WHERE m.department IS NOT NULL
     GROUP BY m.department
     ORDER BY m.department
 """, nativeQuery = true)
     List<Object[]> findDepartmentPerformance();
 
+    // 🔹 Conta todas as tarefas atribuídas a um membro específico
+    long countByAssignee(Member assignee);
 
+    // 🔹 Conta todas as tarefas de um membro com um status específico
+    long countByAssigneeAndStatus(Member assignee, TaskStatus status);
 }

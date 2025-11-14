@@ -7,7 +7,6 @@ import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class TaskSpecification {
 
@@ -33,11 +32,6 @@ public class TaskSpecification {
     public static Specification<Task> withPriority(Priority priority) {
         return (root, query, cb) ->
                 priority == null ? null : cb.equal(root.get("priority"), priority);
-    }
-
-    public static Specification<Task> withAssignee(UUID assigneeId) {
-        return (root, query, cb) ->
-                assigneeId == null ? null : cb.equal(root.join("assignee", JoinType.LEFT).get("id"), assigneeId);
     }
 
     public static Specification<Task> withProject(String project) {
@@ -98,5 +92,6 @@ public class TaskSpecification {
                 onlyOverdue(onlyOverdue)
         );
     }
+
 
 }
