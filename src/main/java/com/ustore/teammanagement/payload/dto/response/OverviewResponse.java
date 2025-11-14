@@ -6,13 +6,10 @@ import com.ustore.teammanagement.core.enums.TaskStatus;
 import java.util.List;
 import java.util.Map;
 
-public record AnalyticsResponse(
+public record OverviewResponse(
         long activeTasks,
         long lateTasks,
         double completionRate,
-        long activeMembers,
-        Map<TaskStatus, Long> tasksByStatus,
-        Map<Priority, Long> tasksByPriority,
-        List<Map<String, Object>> completionTrend,
-        List<Map<String, Object>> departmentPerformance
+        long activeMembers
+
 ) {}
