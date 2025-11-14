@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,13 +59,6 @@ public interface AnalyticsAPI {
     @Operation(
             summary = "Análise de desempenho de membros",
             description = "Retorna métricas de produtividade dos membros filtrados por departamento e nome, com suporte a paginação.",
-            parameters = {
-                    @Parameter(name = "department", description = "Nome do departamento para filtro", example = "development"),
-                    @Parameter(name = "name", description = "Parte do nome do membro", example = "gustavo"),
-                    @Parameter(name = "page", description = "Número da página", example = "0"),
-                    @Parameter(name = "size", description = "Quantidade de itens por página", example = "10"),
-                    @Parameter(name = "sort", description = "Ordenação padrão do Spring", example = "name,asc")
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Dados retornados com sucesso",
                             content = @Content(schema = @Schema(example = """
@@ -90,9 +84,7 @@ public interface AnalyticsAPI {
     )
     @GetMapping("/members")
     ResponseEntity<Map<String, Object>> getMembersAnalysis(
-            String department,
-            String name,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     );
 
 
@@ -101,10 +93,6 @@ public interface AnalyticsAPI {
     @Operation(
             summary = "Obter progresso dos projetos",
             description = "Retorna uma lista de projetos com informações como progresso, total de tarefas, membros envolvidos e status.",
-            parameters = {
-                    @Parameter(name = "department", description = "Filtrar projetos por departamento de quem está atribuído às tarefas"),
-                    @Parameter(name = "name", description = "Filtrar por nome do projeto", example = "web")
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Lista de projetos retornada com sucesso",
                             content = @Content(schema = @Schema(example = """
@@ -128,8 +116,5 @@ public interface AnalyticsAPI {
             }
     )
     @GetMapping("/projects")
-    ResponseEntity<Map<String, Object>> getProjectsAnalysis(
-            String department,
-            String name
-    );
+    public ResponseEntity<Map<String, Object>> getProjectsAnalysis() ;
 }

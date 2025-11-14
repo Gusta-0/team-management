@@ -1,7 +1,5 @@
 package com.ustore.teammanagement.core.service;
 
-import com.ustore.teammanagement.core.Specifications.MemberSpecification;
-import com.ustore.teammanagement.core.Specifications.TaskSpecification;
 import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.core.enums.MemberStatus;
@@ -10,12 +8,11 @@ import com.ustore.teammanagement.core.enums.TaskStatus;
 import com.ustore.teammanagement.core.repository.MemberRepository;
 import com.ustore.teammanagement.core.repository.TaskRepository;
 import com.ustore.teammanagement.payload.dto.response.AnalyticsTaskResponse;
-import com.ustore.teammanagement.payload.dto.response.OverviewResponse;
 import com.ustore.teammanagement.payload.dto.response.MemberPerformanceResponse;
+import com.ustore.teammanagement.payload.dto.response.OverviewResponse;
 import com.ustore.teammanagement.payload.dto.response.ProjectProgressResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -109,11 +106,8 @@ public class AnalyticsService {
         return result;
     }
 
-    public Page<MemberPerformanceResponse> getPerformanceByDepartment(String department, String memberName, Pageable pageable
-    ) {
-        Specification<Member> spec = MemberSpecification.withAnalysisFilters(department, memberName);
-
-        return memberRepository.findAll(spec, pageable)
+    public Page<MemberPerformanceResponse> getPerformance(Pageable pageable) {
+        return memberRepository.findAll(pageable)
                 .map(member -> {
                     long tasksAssigned = taskRepository.countByAssignee(member);
                     long tasksCompleted = taskRepository.countByAssigneeAndStatus(member, TaskStatus.COMPLETED);
@@ -131,10 +125,10 @@ public class AnalyticsService {
                 });
     }
 
-    public List<ProjectProgressResponse> getProjectProgress(String department, String name) {
-        List<Task> tasks = taskRepository.findAll(
-                TaskSpecification.withAnalysisFilters(department, name)
-        );
+
+    public List<ProjectProgressResponse> getProjectProgress() {
+
+        List<Task> tasks = taskRepository.findAll();
 
         // Agrupar tarefas por nome do projeto
         Map<String, List<Task>> grouped = tasks.stream()
@@ -191,6 +185,7 @@ public class AnalyticsService {
                 })
                 .toList();
     }
+
 
     private TaskStatus calculateProjectStatus(LocalDate dueDate) {
         if (dueDate == null) return TaskStatus.IN_PROGRESSO; // ou outro status

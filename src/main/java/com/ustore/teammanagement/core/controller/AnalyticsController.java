@@ -40,12 +40,9 @@ public class AnalyticsController implements AnalyticsAPI {
 
     @GetMapping("/members")
     public ResponseEntity<Map<String, Object>> getMembersAnalysis(
-            @RequestParam(required = false) String department,
-            @RequestParam(required = false) String name,
             @ParameterObject Pageable pageable
     ) {
-        Page<MemberPerformanceResponse> members =
-                analyticsService.getPerformanceByDepartment(department, name, pageable);
+        Page<MemberPerformanceResponse> members = analyticsService.getPerformance(pageable);
 
         Map<String, Object> response = Map.of(
                 "members", members.getContent(),
@@ -58,17 +55,16 @@ public class AnalyticsController implements AnalyticsAPI {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/projects")
-    public ResponseEntity<Map<String, Object>> getProjectsAnalysis(
-            @RequestParam(required = false) String department,
-            @RequestParam(required = false) String name
-    ) {
+    public ResponseEntity<Map<String, Object>> getProjectsAnalysis() {
         List<ProjectProgressResponse> projects =
-                analyticsService.getProjectProgress(department, name);
+                analyticsService.getProjectProgress();
 
         Map<String, Object> response = Map.of(
                 "projects", projects
         );
+
         return ResponseEntity.ok(response);
     }
 }

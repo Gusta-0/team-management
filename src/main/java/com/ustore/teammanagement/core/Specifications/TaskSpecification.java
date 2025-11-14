@@ -1,17 +1,12 @@
 package com.ustore.teammanagement.core.Specifications;
 
-import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.entity.Task;
 import com.ustore.teammanagement.core.enums.Priority;
 import com.ustore.teammanagement.core.enums.TaskStatus;
 import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class TaskSpecification {
 
@@ -37,11 +32,6 @@ public class TaskSpecification {
     public static Specification<Task> withPriority(Priority priority) {
         return (root, query, cb) ->
                 priority == null ? null : cb.equal(root.get("priority"), priority);
-    }
-
-    public static Specification<Task> withAssignee(UUID assigneeId) {
-        return (root, query, cb) ->
-                assigneeId == null ? null : cb.equal(root.join("assignee", JoinType.LEFT).get("id"), assigneeId);
     }
 
     public static Specification<Task> withProject(String project) {
@@ -103,26 +93,5 @@ public class TaskSpecification {
         );
     }
 
-    public static Specification<Task> withAnalysisFilters(String department, String memberName) {
-        return (root, query, builder) -> {
 
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (department != null && !department.isBlank()) {
-                predicates.add(builder.like(
-                        builder.lower(root.get("department")),
-                        "%" + department.toLowerCase() + "%"
-                ));
-            }
-
-            if (memberName != null && !memberName.isBlank()) {
-                predicates.add(builder.like(
-                        builder.lower(root.get("name")),
-                        "%" + memberName.toLowerCase() + "%"
-                ));
-            }
-
-            return builder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
 }
