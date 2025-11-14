@@ -15,7 +15,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -33,6 +33,7 @@ public interface TaskAPI {
                     @ApiResponse(responseCode = "404", description = "User or assignee not found")
             }
     )
+    @PostMapping
     ResponseEntity<TaskResponse> createTask(TaskRequest request);
 
     @Operation(
@@ -43,6 +44,7 @@ public interface TaskAPI {
                             content = @Content(schema = @Schema(implementation = Page.class)))
             }
     )
+    @GetMapping
     public ResponseEntity<Page<TaskResponse>> filterTasks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String project,
@@ -72,6 +74,7 @@ public interface TaskAPI {
                     )
             }
     )
+    @PutMapping("/{id}")
     ResponseEntity<TaskResponse> updateTask(
             @Parameter(description = "Task ID", required = true)
             UUID id,
@@ -89,5 +92,6 @@ public interface TaskAPI {
                     @ApiResponse(responseCode = "404", description = "Task not found")
             }
     )
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTask(@Parameter(description = "Task ID") UUID id);
 }
