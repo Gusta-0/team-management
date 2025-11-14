@@ -3,7 +3,11 @@ package com.ustore.teammanagement.core.Specifications;
 import com.ustore.teammanagement.core.entity.Member;
 import com.ustore.teammanagement.core.enums.MemberStatus;
 import com.ustore.teammanagement.core.enums.Role;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberSpecification {
 
@@ -50,5 +54,29 @@ public class MemberSpecification {
                 withRole(role)
         );
     }
+
+    public static Specification<Member> withAnalysisFilters(String department, String memberName) {
+        return (root, query, builder) -> {
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (department != null && !department.isBlank()) {
+                predicates.add(builder.like(
+                        builder.lower(root.get("department")),
+                        "%" + department.toLowerCase() + "%"
+                ));
+            }
+
+            if (memberName != null && !memberName.isBlank()) {
+                predicates.add(builder.like(
+                        builder.lower(root.get("name")),
+                        "%" + memberName.toLowerCase() + "%"
+                ));
+            }
+
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
 
 }
