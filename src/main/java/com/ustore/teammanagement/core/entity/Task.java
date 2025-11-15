@@ -241,6 +241,14 @@ public class Task {
             return this;
         }
 
+        public void setCreatedAt(OffsetDateTime createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public OffsetDateTime getCreatedAt() {
+            return createdAt;
+        }
+
         public Task build() {
             return new Task(id, title, description, status, priority, dueDate, project,
                     tags, createdAt, updatedAt, assignee, createdBy);

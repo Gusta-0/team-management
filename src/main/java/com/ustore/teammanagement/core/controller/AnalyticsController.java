@@ -55,7 +55,6 @@ public class AnalyticsController implements AnalyticsAPI {
         return ResponseEntity.ok(response);
     }
 
-
     @GetMapping("/projects")
     public ResponseEntity<Map<String, Object>> getProjectsAnalysis() {
         List<ProjectProgressResponse> projects =
