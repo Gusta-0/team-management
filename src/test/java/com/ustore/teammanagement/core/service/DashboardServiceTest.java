@@ -91,7 +91,7 @@ class DashboardServiceTest {
 
         Task t3 = new Task();
         t3.setTitle("Em andamento");
-        t3.setStatus(TaskStatus.IN_PROGRESSO);  // Deve ser ignorada
+        t3.setStatus(TaskStatus.IN_PROGRESSO);
 
         Pageable pageable = PageRequest.of(0, 5);
 
