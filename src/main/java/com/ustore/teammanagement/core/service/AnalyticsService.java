@@ -168,7 +168,7 @@ public class AnalyticsService {
                             .findFirst()
                             .orElse(Priority.MEDIUM);
 
-                    TaskStatus status = calculateProjectStatus(dueDate);
+                    TaskStatus status = calculateProjectStatus(projectTasks);
 
                     return new ProjectProgressResponse(
                             UUID.randomUUID(),
@@ -186,12 +186,26 @@ public class AnalyticsService {
                 .toList();
     }
 
+    public TaskStatus calculateProjectStatus(List<Task> tasks) {
 
-    private TaskStatus calculateProjectStatus(LocalDate dueDate) {
-        if (dueDate == null) return TaskStatus.IN_PROGRESSO; // ou outro status
-        return dueDate.isBefore(LocalDate.now())
-                ? TaskStatus.LATE
-                : TaskStatus.IN_PROGRESSO;
+        boolean allCompleted = tasks.stream()
+                .allMatch(t -> t.getStatus() == TaskStatus.COMPLETED);
+
+        if (allCompleted) {
+            return TaskStatus.COMPLETED;
+        }
+
+        boolean hasLate = tasks.stream()
+                .anyMatch(t ->
+                        t.getDueDate() != null &&
+                                t.getDueDate().isBefore(LocalDate.now()) &&
+                                t.getStatus() != TaskStatus.COMPLETED
+                );
+
+        if (hasLate) {
+            return TaskStatus.LATE;
+        }
+
+        return TaskStatus.IN_PROGRESSO;
     }
-
 }
