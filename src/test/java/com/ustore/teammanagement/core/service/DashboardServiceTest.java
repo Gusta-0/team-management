@@ -40,7 +40,7 @@ class DashboardServiceTest {
     }
 
     @Test
-    void testGetDashboardStats() {
+    void testGetDashboardStatus() {
         when(memberRepository.countByStatus(MemberStatus.ACTIVE)).thenReturn(10L);
         when(taskRepository.countByStatusNot(TaskStatus.COMPLETED)).thenReturn(6L);
         when(taskRepository.countByStatusIn(List.of(
@@ -60,7 +60,7 @@ class DashboardServiceTest {
     }
 
     @Test
-    void testGetDashboardStats_NoTasks() {
+    void testGetDashboardStatus_NoTasks() {
         when(memberRepository.countByStatus(MemberStatus.ACTIVE)).thenReturn(3L);
         when(taskRepository.countByStatusNot(TaskStatus.COMPLETED)).thenReturn(0L);
         when(taskRepository.countByStatusIn(any())).thenReturn(0L);
