@@ -9,6 +9,7 @@ import com.ustore.teammanagement.payload.dto.request.MemberRequest;
 import com.ustore.teammanagement.payload.dto.request.MemberUpdateRequest;
 import com.ustore.teammanagement.payload.dto.response.MemberResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -105,6 +106,7 @@ class MemberServiceTest {
         verify(memberRepository, times(1)).findByEmail(member1.getEmail());
     }
 
+    @DisplayName("O teste vai quebrar porque a verificação de segurança está desativada no momento")
     @Test
     void shouldSaveMemberSuccessfullyWhenAdmin() throws Exception {
         Member loggedAdmin = Member.builder()
@@ -149,6 +151,7 @@ class MemberServiceTest {
         SecurityContextHolder.clearContext();
     }
 
+    @DisplayName("O teste vai quebrar porque a verificação de segurança está desativada no momento")
     @Test
     void shouldThrowExceptionWhenMemberTriesToSaveUser() {
         Member loggedMember = Member.builder()
