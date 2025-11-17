@@ -28,6 +28,10 @@ public class LateTaskScheduler {
                 today
         );
 
+        if (overdueTasks.isEmpty()) {
+            return;
+        }
+
         for (Task task : overdueTasks) {
             task.setStatus(TaskStatus.LATE);
         }
