@@ -19,8 +19,6 @@ import java.util.Map;
 @Tag(name = "Analytics", description = "Endpoints para análises de membros, tarefas e projetos")
 public interface AnalyticsAPI {
 
-    // ----------------------------- OVERVIEW -----------------------------
-
     @Operation(
             summary = "Obter visão geral da aplicação",
             description = "Retorna estatísticas gerais como total de membros, tarefas, projetos, atividades recentes etc.",
@@ -31,9 +29,6 @@ public interface AnalyticsAPI {
     )
     @GetMapping("/overview")
     ResponseEntity<OverviewResponse> Overview();
-
-
-    // ----------------------------- TASKS -----------------------------
 
     @Operation(
             summary = "Obter análises relacionadas às tarefas",
@@ -52,9 +47,6 @@ public interface AnalyticsAPI {
     )
     @GetMapping("/tasks")
     ResponseEntity<AnalyticsTaskResponse> getAnalyticsTasks(int days);
-
-
-    // ----------------------------- MEMBERS -----------------------------
 
     @Operation(
             summary = "Análise de desempenho de membros",
@@ -86,9 +78,6 @@ public interface AnalyticsAPI {
     ResponseEntity<Map<String, Object>> getMembersAnalysis(
             @ParameterObject Pageable pageable
     );
-
-
-    // ----------------------------- PROJECTS -----------------------------
 
     @Operation(
             summary = "Obter progresso dos projetos",
