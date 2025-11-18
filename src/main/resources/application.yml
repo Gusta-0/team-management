@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: deploy
 
 ---
 spring:
@@ -9,10 +9,10 @@ spring:
       on-profile: deploy
 
   datasource:
-    url: jdbc:postgresql://dpg-d3qj546r433s73e3pa9g-a:5432/teammanager_ygig
+    url: jdbc:postgresql://dpg-d4ee47n5r7bs73fntrsg-a:5432/teammanagerdb
     driver-class-name: org.postgresql.Driver
     username: admin
-    password: 0HinuiHikVoLI7nRYelamlcU4T19aVbP
+    password: UkKvwuZAsgyld1AhIj0cS77oMDkNfIBJ
 
   jpa:
     hibernate:
