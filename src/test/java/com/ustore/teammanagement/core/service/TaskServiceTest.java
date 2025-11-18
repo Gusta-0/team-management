@@ -20,6 +20,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -31,13 +36,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
 
     @InjectMocks
@@ -179,59 +182,56 @@ class TaskServiceTest {
         assertThrows(IllegalStateException.class, () -> taskService.createTask(request));
     }
 
-//    @Test
-//    @DisplayName("Deve filtrar tarefas corretamente usando Specification")
-//    void filterTasks_success() {
-//
-//        Pageable pageable = PageRequest.of(0, 10);
-//
-//        Task task = new Task();
-//        task.setId(UUID.randomUUID());
-//        task.setTitle("Teste");
-//        task.setProject("WebApp");
-//
-//// 🔥 adicionando assignee para evitar NPE no TaskResponse
-//        Member assignee = new Member();
-//        assignee.setId(UUID.randomUUID());
-//        assignee.setName("João Dev");
-//        task.setAssignee(assignee);
-//
-//// 🔥 adicionando createdBy para evitar NPE também
-//        Member createdBy = new Member();
-//        createdBy.setId(UUID.randomUUID());
-//        createdBy.setName("Maria Admin");
-//        task.setCreatedBy(createdBy);
-//
-//        Page<Task> taskPage = new PageImpl<>(List.of(task));
-//
-//        when(taskRepository.findAll(any(Specification.class), eq(pageable)))
-//                .thenReturn(taskPage);
-//
-//
-//        Page<TaskResponse> result = taskService.filter(
-//                "Teste",
-//                "WebApp",
-//                TaskStatus.TO_DO,
-//                Priority.HIGH,
-//                "João",
-//                "Maria",
-//                LocalDate.now(),
-//                LocalDate.now().plusDays(1),
-//                false,
-//                pageable
-//        );
-//
-//        assertNotNull(result);
-//        assertEquals(1, result.getContent().size());
-//
-//        TaskResponse response = result.getContent().get(0);
-//
-//        assertEquals(task.getId(), response.id());
-//        assertEquals(task.getTitle(), response.title());
-//        assertEquals(task.getProject(), response.project());
-//        assertEquals(task.getAssignee().getName(), response.assignee());
-//
-//        verify(taskRepository, times(1))
-//                .findAll(any(Specification.class), eq(pageable));
-//    }
+    @Test
+    @DisplayName("Deve filtrar tarefas corretamente usando Specification")
+    void filterTasks_success() {
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Task task = new Task();
+        task.setId(UUID.randomUUID());
+        task.setTitle("Teste");
+        task.setProject("WebApp");
+
+        Member assignee = new Member();
+        assignee.setId(UUID.randomUUID());
+        assignee.setName("João Dev");
+        task.setAssignee(assignee);
+
+        Member createdBy = new Member();
+        createdBy.setId(UUID.randomUUID());
+        createdBy.setName("Maria Admin");
+        task.setCreatedBy(createdBy);
+
+        Page<Task> taskPage = new PageImpl<>(List.of(task));
+
+        when(taskRepository.findAll(any(Specification.class), eq(pageable)))
+                .thenReturn(taskPage);
+
+        Page<TaskResponse> result = taskService.filter(
+                "Teste",
+                "WebApp",
+                TaskStatus.TO_DO,
+                Priority.HIGH,
+                "João",
+                "Maria",
+                LocalDate.now(),
+                LocalDate.now().plusDays(1),
+                false,
+                pageable
+        );
+
+        assertNotNull(result);
+        assertEquals(1, result.getContent().size());
+
+        TaskResponse response = result.getContent().get(0);
+
+        assertEquals(task.getId(), response.id());
+        assertEquals(task.getTitle(), response.title());
+        assertEquals(task.getProject(), response.project());
+        assertEquals(task.getAssignee().getName(), response.assignee().name());
+
+        verify(taskRepository, times(1))
+                .findAll(any(Specification.class), eq(pageable));
+    }
 }
