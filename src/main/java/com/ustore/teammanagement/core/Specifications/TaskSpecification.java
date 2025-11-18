@@ -92,6 +92,4 @@ public class TaskSpecification {
                 onlyOverdue(onlyOverdue)
         );
     }
-
-
 }
