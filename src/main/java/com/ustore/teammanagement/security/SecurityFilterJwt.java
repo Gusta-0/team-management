@@ -52,6 +52,11 @@ public class SecurityFilterJwt extends OncePerRequestFilter {
             return;
         }
 
+        if (request.getServletPath().equals("/ping")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Optional<String> tokenJwtRequest = recoverTokenRequest(request);
 
         if (tokenJwtRequest.isPresent()) {
